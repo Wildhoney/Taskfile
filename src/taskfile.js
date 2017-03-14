@@ -7,6 +7,7 @@ const newLines = /\r?\n|\r/g;
 const multipleSpaces = /\s\s+/g;
 
 const strip = compose(
+    str => str.trim(),
     str => str.replace(newLines, ''),
     str => str.replace(multipleSpaces, ' ')
 );
@@ -29,7 +30,7 @@ const parse = (tasks, isWindows) => {
             ${xs}
             ${task}
             ${isLast ? '' : separator}
-        `.trim());
+        `);
 
     }, '');
 
