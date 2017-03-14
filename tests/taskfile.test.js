@@ -12,7 +12,7 @@ test('should be able to produce a command that is entirely parallel;', t => {
 
     // Linux, OSX, etc...
     const [firstTask] = read('./tests/mock/parallel.yml', false);
-    t.is(firstTask.tasks, 'npm run js & npm run sass & npm run images');
+    t.is(firstTask.tasks, 'npm run js & npm run sass & npm run images & wait');
 
     // Windows.
     const [secondTask] = read('./tests/mock/parallel.yml', true);

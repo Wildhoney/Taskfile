@@ -21,6 +21,7 @@ const strip = compose(
 const parse = (tasks, isWindows) => {
 
     const separator = isWindows ? '&&' : '&';
+    const terminator = isWindows ? '' : '& wait';
 
     return tasks.reduce((xs, task, index) => {
 
@@ -29,7 +30,7 @@ const parse = (tasks, isWindows) => {
         return strip(`
             ${xs}
             ${task}
-            ${isLast ? '' : separator}
+            ${isLast ? terminator : separator}
         `);
 
     }, '');
