@@ -29,7 +29,8 @@
   },
   "homepage": "https://github.com/Wildhoney/Taskfile#readme",
   "dependencies": {
-    "js-yaml": "~3.7.0"
+    "js-yaml": "~3.7.0",
+    "ramda": "~0.23.0"
   },
   "devDependencies": {
     "ava": "~0.17.0",

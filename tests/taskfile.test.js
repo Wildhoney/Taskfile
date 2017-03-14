@@ -1,14 +1,21 @@
 import test from 'ava';
 import { read } from '../src/taskfile';
 
-test('x', t => {
+test('should be able to read the meta information;', t => {
+    const [task] = read('./tests/mock/meta.yml');
+    t.is(task.name, 'js');
+    t.is(task.type, 'build');
+    t.is(task.desc, 'Test description.');
+});
 
-    const [firstTask] = read('./tests/mock/taskfile.yml');
+test('should be able to produce a command that is entirely parallel;', t => {
 
-    t.is(firstTask.name, 'js');
-    t.is(firstTask.type, 'build');
-    t.is(firstTask.desc, 'Test description.');
+    // Linux, OSX, etc...
+    const [firstTask] = read('./tests/mock/parallel.yml', false);
+    t.is(firstTask.tasks, 'npm run js & npm run sass & npm run images');
 
-    console.log(firstTask.tasks);
+    // Windows.
+    const [secondTask] = read('./tests/mock/parallel.yml', true);
+    t.is(secondTask.tasks, 'npm run js && npm run sass && npm run images');
 
 });

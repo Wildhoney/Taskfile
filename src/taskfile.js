@@ -1,50 +1,35 @@
 import { readFileSync } from 'fs';
+import { compose } from 'ramda';
 import { platform } from 'os';
 import yaml from 'js-yaml';
 
-const removeNewLines = /\r?\n|\r/g;
-const removeMultipleSpaces = /\s\s+/g;
+const newLines = /\r?\n|\r/g;
+const multipleSpaces = /\s\s+/g;
 
-const isWindows = platform() === 'win32';
+const strip = compose(
+    str => str.replace(newLines, ''),
+    str => str.replace(multipleSpaces, ' ')
+);
 
 /**
  * @method parse
  * @param {Array} tasks
+ * @param {Array} [isWindows]
  * @return {String}
  */
-const parse = tasks => {
+const parse = (tasks, isWindows) => {
 
-    return tasks.reduce((accumulator, task, index) => {
+    const separator = isWindows ? '&&' : '&';
 
-        const isEmpty = accumulator === '';
-        const isStart = index === 0;
-        const isLast = tasks.length === (index + 1);
-        const isCurrentArray = Array.isArray(task);
-        const isNextArray = Array.isArray(tasks[index + 1]);
-        const isPreviousArray = Array.isArray(tasks[index - 1]);
-        const isStartOrPreviousIsArray = isPreviousArray || isStart;
-        const isLastOrNextIsArray = isNextArray || isLast;
-        const isSingleCommand = tasks.length === 1 || tasks.filter(task => !Array.isArray(task)).length === 1;
-        const separator = isPreviousArray ? '&&' : (isWindows ? '&&' : '&');
+    return tasks.reduce((xs, task, index) => {
 
-        if (isCurrentArray) {
+        const isLast = index === (tasks.length - 1);
 
-            return `
-                ${accumulator}
-                ${isEmpty ? '' : '&&'}
-                ${parse(task)}
-                ${isLastOrNextIsArray ? (isSingleCommand ? ')' : '& wait)') : ''}
-            `.trim().replace(removeNewLines, '').replace(removeMultipleSpaces, ' ');
-
-        }
-
-        return `
-            ${accumulator}
-            ${isEmpty ? '' : separator}
-            ${isStartOrPreviousIsArray ? '(' : ''}
+        return strip(`
+            ${xs}
             ${task}
-            ${isLastOrNextIsArray ? (isSingleCommand ? ')' : '& wait)') : ''}
-        `.trim().replace(removeNewLines, '').replace(removeMultipleSpaces, ' ');
+            ${isLast ? '' : separator}
+        `.trim());
 
     }, '');
 
@@ -53,12 +38,13 @@ const parse = tasks => {
 /**
  * @method read
  * @param {String} file
+ * @param {Boolean} [isWindows]
  * @return {String}
  */
-export const read = file => {
+export const read = (file, isWindows = platform() === 'win32') => {
 
     return yaml.safeLoad(readFileSync(file)).map(model => {
-        return { ...model, tasks: parse(model.tasks) };
+        return { ...model, tasks: Array.isArray(model.tasks) ? parse(model.tasks, isWindows) : [] };
     });
 
 };
