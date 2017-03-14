@@ -8,14 +8,26 @@ test('should be able to read the meta information;', t => {
     t.is(task.desc, 'Test description.');
 });
 
-test('should be able to produce a command that is entirely parallel;', t => {
+test('should be able to handle simple concurrency;', t => {
 
     // Linux, OSX, etc...
-    const [firstTask] = read('./tests/mock/parallel.yml', false);
+    const [firstTask] = read('./tests/mock/concurrent.yml', false);
     t.is(firstTask.tasks, 'npm run js & npm run sass & npm run images & wait');
 
     // Windows.
-    const [secondTask] = read('./tests/mock/parallel.yml', true);
+    const [secondTask] = read('./tests/mock/concurrent.yml', true);
+    t.is(secondTask.tasks, 'npm run js && npm run sass && npm run images');
+
+});
+
+test('should be able to handle simple consecutively;', t => {
+
+    // Linux, OSX, etc...
+    const [firstTask] = read('./tests/mock/consecutive.yml', false);
+    t.is(firstTask.tasks, 'npm run js && npm run sass && npm run images');
+
+    // Windows.
+    const [secondTask] = read('./tests/mock/consecutive.yml', true);
     t.is(secondTask.tasks, 'npm run js && npm run sass && npm run images');
 
 });

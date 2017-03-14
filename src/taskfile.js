@@ -1,11 +1,24 @@
 import { readFileSync } from 'fs';
-import { compose } from 'ramda';
+import { compose, not } from 'ramda';
 import { platform } from 'os';
 import yaml from 'js-yaml';
 
+/**
+ * @constant newLines
+ * @type {RegExp}
+ */
 const newLines = /\r?\n|\r/g;
+
+/**
+ * @constant multipleSpaces
+ * @type {RegExp}
+ */
 const multipleSpaces = /\s\s+/g;
 
+/**
+ * @method strip
+ * @return {String}
+ */
 const strip = compose(
     str => str.trim(),
     str => str.replace(newLines, ''),
@@ -20,12 +33,13 @@ const strip = compose(
  */
 const parse = (tasks, isWindows) => {
 
-    const separator = isWindows ? '&&' : '&';
-    const terminator = isWindows ? '' : '& wait';
-
     return tasks.reduce((xs, task, index) => {
 
-        const isLast = index === (tasks.length - 1);
+        const isLast   = index === (tasks.length - 1);
+        const isSingle = tasks.filter(task => not(Array.isArray(task))).length === 1;
+
+        const separator  = isWindows || isSingle ? '&&' : '&';
+        const terminator = isWindows || isSingle ? '' : '& wait';
 
         return strip(`
             ${xs}
