@@ -1,0 +1,31 @@
+{
+  "name": "taskfile",
+  "version": "0.1.0",
+  "description": "Boilerplate reducing wrapper for producing \"npm run\" commands via YAML files, based on the fabulous idea by Adrian Cooney.",
+  "main": "src/taskfile.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "ava"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Wildhoney/Taskfile.git"
+  },
+  "keywords": [
+    "taskfile",
+    "tasks",
+    "npm",
+    "run",
+    "scripts",
+    "build",
+    "test"
+  ],
+  "author": "Adam Timberlake <adam.timberlake@gmail.com>",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/Wildhoney/Taskfile/issues"
+  },
+  "homepage": "https://github.com/Wildhoney/Taskfile#readme"
+}
