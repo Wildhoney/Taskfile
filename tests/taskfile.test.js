@@ -21,7 +21,7 @@ test('should be able to handle simple concurrency;', t => {
 
     // Linux, OSX, etc...
     const [firstTask] = read('./tests/mock/concurrent.yml', false);
-    t.is(firstTask.tasks, 'npm run js & npm run sass & npm run images & wait');
+    t.is(firstTask.tasks, '(npm run js & npm run sass & npm run images & wait)');
 
     // Windows.
     const [secondTask] = read('./tests/mock/concurrent.yml', true);
