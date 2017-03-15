@@ -2,10 +2,19 @@ import test from 'ava';
 import { read } from '../src/taskfile';
 
 test('should be able to read the meta information;', t => {
+
     const [task] = read('./tests/mock/meta.yml');
     t.is(task.name, 'js');
     t.is(task.type, 'build');
     t.is(task.desc, 'Test description.');
+
+});
+
+test('should be able to handle a single command;', t => {
+
+    const [firstTask] = read('./tests/mock/single.yml', false);
+    t.is(firstTask.tasks, 'npm run js');
+
 });
 
 test('should be able to handle simple concurrency;', t => {
