@@ -92,7 +92,7 @@ const parse = (tasks, isWindows) => {
 /**
  * @method seek
  * @param {String} [file = TASKFILE_RC]
- * @return {String}
+ * @return {Object}
  */
 export const seek = (file = TASKFILE_RC) => {
 
