@@ -8,7 +8,7 @@ import yaml from 'js-yaml';
  * @constant TASKFILE_RC
  * @type {String}
  */
-const TASKFILE_RC = 'taskfile.yml';
+const TASKFILE_RC = '.taskfile.yml';
 
 /**
  * @constant MAX_ITERATIONS
@@ -127,9 +127,10 @@ export const read = (filename, isWindows = platform() === 'win32') => {
     const file = seek(filename);
 
     return file ? yaml.safeLoad(readFileSync(file)).map(model => {
+
+        // Attempt to read the file as YAML.
         return { ...model, tasks: Array.isArray(model.tasks) ? parse(model.tasks, isWindows) : [] };
-    }) : (() => {
-        throw new Error(`Unable to find ${filename} relative to the current directory.`)
-    })();
+
+    }) : (() => { throw new Error(`Unable to find ${filename} relative to the current directory.`); })();
 
 };

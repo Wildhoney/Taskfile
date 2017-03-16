@@ -12,17 +12,17 @@ test('should be able to read the meta information;', t => {
 
 });
 
-test('should be able to find the taskfile.yml with backwards recursion;', t => {
+test('should be able to find the .taskfile.yml with backwards recursion;', t => {
 
     mock({
         '/projects/taskfile/example/css': {
             'empty': {}
         },
-        '/projects/taskfile/taskfile.yml': 'content of taskfile'
+        '/projects/taskfile/.taskfile.yml': 'content of taskfile'
     });
 
     chdir('/projects/taskfile/example/css');
-    t.is(seek(), './../../taskfile.yml');
+    t.is(seek(), './../../.taskfile.yml');
 
     chdir('/projects');
     t.false(seek());
