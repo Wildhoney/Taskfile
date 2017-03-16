@@ -47,8 +47,21 @@ test('should be able to handle a mixture of consecutive and concurrent;', t => {
     const [firstTask] = read('./tests/mock/mixture.yml', false);
     t.is(firstTask.tasks, '(npm run js & npm run sass & wait) && (npm run spec & npm run lint & wait) && (npm run images & wait)');
 
-    // // Windows.
+    // Windows.
     const [secondTask] = read('./tests/mock/mixture.yml', true);
     t.is(secondTask.tasks, 'npm run js && npm run sass && npm run spec && npm run lint && npm run images');
+
+});
+
+
+test('should be able to handle a nested mixture of consecutive and concurrent;', t => {
+
+    // Linux, OSX, etc...
+    const [firstTask] = read('./tests/mock/nested.yml', false);
+    t.is(firstTask.tasks, '(npm run spec & wait) && npm run coverage && (npm run lint & npm run headless & wait) && (npm run js & npm run sass & npm run images & wait) && (npm run clean & npm run notify & wait)');
+
+    // Windows.
+    const [secondTask] = read('./tests/mock/nested.yml', true);
+    t.is(secondTask.tasks, 'npm run spec && npm run coverage && npm run lint && npm run headless && npm run js && npm run sass && npm run images && npm run clean && npm run notify');
 
 });

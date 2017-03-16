@@ -56,8 +56,9 @@ const parse = (tasks, isWindows) => {
 
             return strip(`
                 ${xs}
-                ${isSingle || !isWindows ? '&&' : ''}
-                ${parse(task, isWindows)} &&
+                ${(isSingle || !isWindows) && (!isFirst && !isPreviousArray) ? '&&' : ''}
+                ${parse(task, isWindows)}
+                ${isLast ? '' : '&&'}
             `);
 
         }
