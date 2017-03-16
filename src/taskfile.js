@@ -48,7 +48,7 @@ const strip = compose(
 /**
  * @method parse
  * @param {Array} tasks
- * @param {Array} [isWindows]
+ * @param {Boolean} [isWindows]
  * @return {String}
  */
 const parse = (tasks, isWindows) => {
@@ -118,11 +118,11 @@ export const seek = (file = TASKFILE_RC) => {
 
 /**
  * @method read
- * @param {String} file
- * @param {Boolean} [isWindows]
+ * @param {String} [file = TASKFILE_RC]
+ * @param {Boolean} [isWindows = platform() === 'win32']
  * @return {String}
  */
-export const read = (file, isWindows = platform() === 'win32') => {
+export const read = (file = TASKFILE_RC, isWindows = platform() === 'win32') => {
 
     const { found, location } = seek(file);
 
