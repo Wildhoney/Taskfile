@@ -1,5 +1,7 @@
 import test from 'ava';
-import { read } from '../src/taskfile';
+import { chdir } from 'process';
+import mock from 'mock-fs';
+import { read, seek } from '../src/taskfile';
 
 test('should be able to read the meta information;', t => {
 
@@ -7,6 +9,25 @@ test('should be able to read the meta information;', t => {
     t.is(task.name, 'js');
     t.is(task.type, 'build');
     t.is(task.desc, 'Test description.');
+
+});
+
+test('should be able to find the taskfile.yml with backwards recursion;', t => {
+
+    mock({
+        '/projects/taskfile/example/css': {
+            'empty': {}
+        },
+        '/projects/taskfile/taskfile.yml': 'content of taskfile'
+    });
+
+    chdir('/projects/taskfile/example/css');
+    t.is(seek(), './../../taskfile.yml');
+
+    chdir('/projects');
+    t.false(seek());
+
+    mock.restore();
 
 });
 
