@@ -38667,17 +38667,14 @@ var task = (0, _taskfile.read)().find(function (model) {
     return model.name === name;
 });
 
-if (!task) {
+task ? (0, _child_process.spawn)('PATH=./node_modules/.bin:$PATH ' + task.tasks, args, { stdio: 'inherit', shell: true }) : function () {
 
     // Render error that we're unable to find the desired task.
     var pe = new _prettyError2.default();
     var renderedError = pe.render(new Error('Unable to find a task "' + name + '".'));
     console.log(renderedError);
     process.exit(1);
-}
-
-// Run the shell command preserving any colours.
-(0, _child_process.spawn)('PATH=./node_modules/.bin:$PATH ' + task.tasks, args, { stdio: 'inherit', shell: true });
+}();
 
 /***/ })
 /******/ ]);
