@@ -7,7 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "build": "webpack",
+    "build": "webpack && prepend bin/index.js '#!/usr/bin/env node\n\n'",
     "test": "nyc ava && npm run report",
     "report": "nyc report --reporter=html"
   },
@@ -49,6 +49,7 @@
     "coveralls": "~2.11.15",
     "mock-fs": "~4.2.0",
     "nyc": "~10.0.0",
+    "prepend-file-cli": "~1.0.6",
     "webpack": "~2.2.1"
   },
   "ava": {
