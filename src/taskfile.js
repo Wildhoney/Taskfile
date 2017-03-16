@@ -91,10 +91,10 @@ const parse = (tasks, isWindows) => {
 
 /**
  * @method seek
- * @param {String} [file = TASKFILE_RC]
+ * @param {String} [filename = TASKFILE_RC]
  * @return {String}
  */
-export const seek = (file = TASKFILE_RC) => {
+export const seek = (filename = TASKFILE_RC) => {
 
     /**
      * @constant find
@@ -109,7 +109,7 @@ export const seek = (file = TASKFILE_RC) => {
             // Determine if the taskfile exists in the current path.
             return existsSync(location) ? location : recursiveSeek(`${path}../`, iteration + 1);
 
-        })(`${path}${file}`);
+        })(`${path}${filename}`);
     };
 
     return recursiveSeek();
@@ -118,14 +118,18 @@ export const seek = (file = TASKFILE_RC) => {
 
 /**
  * @method read
- * @param {String} file
+ * @param {String} filename
  * @param {Boolean} [isWindows]
  * @return {String}
  */
-export const read = (file = seek(), isWindows = platform() === 'win32') => {
+export const read = (filename, isWindows = platform() === 'win32') => {
 
-    return yaml.safeLoad(readFileSync(file)).map(model => {
+    const file = seek(filename);
+
+    return file ? yaml.safeLoad(readFileSync(file)).map(model => {
         return { ...model, tasks: Array.isArray(model.tasks) ? parse(model.tasks, isWindows) : [] };
-    });
+    }) : (() => {
+        throw new Error(`Unable to find ${filename} relative to the current directory.`)
+    })();
 
 };
