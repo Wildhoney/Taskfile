@@ -91,25 +91,25 @@ const parse = (tasks, isWindows) => {
 
 /**
  * @method seek
- * @param {String} [filename = TASKFILE_RC]
+ * @param {String} [file = TASKFILE_RC]
  * @return {String}
  */
-export const seek = (filename = TASKFILE_RC) => {
+export const seek = (file = TASKFILE_RC) => {
 
     /**
      * @constant find
      * @param {String} [path = './]]
      * @param {Number} [iteration = 0]
-     * @return {String|Boolean}
+     * @return {Object}
      */
     const locate = (path = './', iteration = 0) => {
 
-        return iteration > MAX_ITERATIONS ? false : (location => {
+        return iteration > MAX_ITERATIONS ? { found: false } : (location => {
 
             // Determine if the taskfile exists in the current path.
-            return existsSync(location) ? location : locate(`${path}../`, iteration + 1);
+            return existsSync(location) ? { location, path, found: true } : locate(`${path}../`, iteration + 1);
 
-        })(`${path}${filename}`);
+        })(`${path}${file}`);
     };
 
     return locate();
@@ -118,19 +118,19 @@ export const seek = (filename = TASKFILE_RC) => {
 
 /**
  * @method read
- * @param {String} filename
+ * @param {String} file
  * @param {Boolean} [isWindows]
  * @return {String}
  */
-export const read = (filename, isWindows = platform() === 'win32') => {
+export const read = (file, isWindows = platform() === 'win32') => {
 
-    const file = seek(filename);
+    const { found, location } = seek(file);
 
-    return file ? yaml.safeLoad(readFileSync(file)).map(model => {
+    return found ? yaml.safeLoad(readFileSync(location)).map(model => {
 
         // Attempt to read the file as YAML.
         return { ...model, tasks: Array.isArray(model.tasks) ? parse(model.tasks, isWindows) : [] };
 
-    }) : (() => { throw new Error(`Unable to find ${filename} relative to the current directory.`); })();
+    }) : (() => { throw new Error(`Unable to find ${file} relative to the current directory.`); })();
 
 };

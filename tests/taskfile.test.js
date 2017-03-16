@@ -22,10 +22,10 @@ test('should be able to find the .taskfile.yml with backwards recursion;', t => 
     });
 
     chdir('/projects/taskfile/example/css');
-    t.is(seek(), './../../.taskfile.yml');
+    t.deepEqual(seek(), { location: './../../.taskfile.yml', path: './../../', found: true });
 
     chdir('/projects');
-    t.false(seek());
+    t.deepEqual(seek(), { found: false });
 
     mock.restore();
 
