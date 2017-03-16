@@ -42,18 +42,32 @@ const parse = (tasks, isWindows) => {
 
     return tasks.reduce((xs, task, index) => {
 
-        const isFirst  = index === 0 || Array.isArray(tasks[index - 1]);
-        const isLast   = index === (tasks.length - 1);
-        const isSingle = tasks.filter(task => not(Array.isArray(task))).length === 1;
+        const isFirst         = index === 0;
+        const isLast          = index === (tasks.length - 1);
+        const isPreviousArray = Array.isArray(tasks[index - 1]);
+        const isNextArray     = Array.isArray(tasks[index + 1]);
+        const isSingle        = tasks.filter(task => not(Array.isArray(task))).length === 1;
 
         const inaugurator = isWindows || isSingle ? '' : '(';
-        const separator   = isWindows || isSingle ? '&&' : '&';
+        const separator   = isWindows || isSingle ? '&&' : (isNextArray ? '' : '&');
         const terminator  = isWindows || isSingle ? '' : '& wait)';
 
+        if (Array.isArray(task) && !isSingle) {
+
+            return strip(`
+                ${xs}
+                ${isSingle || !isWindows ? '&&' : ''}
+                ${parse(task, isWindows)} &&
+            `);
+
+        }
+
         return strip(`
-            ${isFirst ? inaugurator : ''}
             ${xs}
+            ${isFirst ? inaugurator : ''}
+            ${isPreviousArray ? inaugurator : ''}
             ${task}
+            ${isNextArray ? terminator : ''}
             ${isLast ? terminator : separator}
         `);
 

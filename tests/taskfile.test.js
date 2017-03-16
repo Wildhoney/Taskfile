@@ -40,3 +40,15 @@ test('should be able to handle simple consecutively;', t => {
     t.is(secondTask.tasks, 'npm run js && npm run sass && npm run images');
 
 });
+
+test('should be able to handle a mixture of consecutive and concurrent;', t => {
+
+    // Linux, OSX, etc...
+    const [firstTask] = read('./tests/mock/mixture.yml', false);
+    t.is(firstTask.tasks, '(npm run js & npm run sass & wait) && (npm run spec & npm run lint & wait) && (npm run images & wait)');
+
+    // // Windows.
+    const [secondTask] = read('./tests/mock/mixture.yml', true);
+    t.is(secondTask.tasks, 'npm run js && npm run sass && npm run spec && npm run lint && npm run images');
+
+});

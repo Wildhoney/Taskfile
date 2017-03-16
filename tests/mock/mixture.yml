@@ -1,0 +1,6 @@
+- tasks:
+    - npm run js
+    - npm run sass
+    - - npm run spec
+      - npm run lint
+    - npm run images
