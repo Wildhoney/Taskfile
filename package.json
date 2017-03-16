@@ -1,6 +1,6 @@
 {
   "name": "taskfile",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Yet another attempt at a simple task runner for npm with parallelisation support using bash commands via YAML.",
   "main": "bin/index.js",
   "directories": {
