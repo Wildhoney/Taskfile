@@ -1,7 +1,7 @@
 {
   "name": "taskfile",
   "version": "0.1.0",
-  "description": "Boilerplate reducing wrapper for producing \"npm run\" commands via YAML files, based on the fabulous idea by Adrian Cooney.",
+  "description": "Yet another attempt at a simple task runner for npm with parallelisation support using bash commands via YAML.",
   "main": "src/taskfile.js",
   "directories": {
     "test": "tests"
