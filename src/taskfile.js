@@ -102,17 +102,17 @@ export const seek = (filename = TASKFILE_RC) => {
      * @param {Number} [iteration = 0]
      * @return {String|Boolean}
      */
-    const recursiveSeek = (path = './', iteration = 0) => {
+    const locate = (path = './', iteration = 0) => {
 
         return iteration > MAX_ITERATIONS ? false : (location => {
 
             // Determine if the taskfile exists in the current path.
-            return existsSync(location) ? location : recursiveSeek(`${path}../`, iteration + 1);
+            return existsSync(location) ? location : locate(`${path}../`, iteration + 1);
 
         })(`${path}${filename}`);
     };
 
-    return recursiveSeek();
+    return locate();
 
 };
 
