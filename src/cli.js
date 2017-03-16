@@ -7,7 +7,7 @@ import { read } from './taskfile';
 const [,, name, ...args] = process.argv;
 const task = read().find(model => model.name === name);
 
-if (!task) {
+task ? spawn(`PATH=./node_modules/.bin:$PATH ${task.tasks}`, args, { stdio: 'inherit', shell: true }) : (() => {
 
     // Render error that we're unable to find the desired task.
     const pe = new PrettyError();
@@ -15,7 +15,4 @@ if (!task) {
     console.log(renderedError);
     process.exit(1);
 
-}
-
-// Run the shell command preserving any colours.
-spawn(`PATH=./node_modules/.bin:$PATH ${task.tasks}`, args, { stdio: 'inherit', shell: true });
+})();
