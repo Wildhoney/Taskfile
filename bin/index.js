@@ -12239,7 +12239,8 @@ var seek = exports.seek = function seek() {
 
     return iteration > MAX_ITERATIONS ? { found: false } : function (location) {
 
-      // Determine if the taskfile exists in the current path.
+      // Determine if the taskfile exists in the current path, otherwise keep iterating until we meet
+      // the limit as determined by `MAX_ITERATIONS`.
       return (0, _fs.existsSync)(location) ? { location: location, path: path, found: true } : locate(path + '../', iteration + 1);
     }('' + path + file);
   };
@@ -38668,7 +38669,8 @@ function _toArray(arr) { return Array.isArray(arr) ? arr : Array.from(arr); }
 // Take the name of the task, and the remaining args (if any), and then find the task
 // based on the passed name.
 var _process$argv = _toArray(process.argv),
-    name = _process$argv[2],
+    _process$argv$ = _process$argv[2],
+    name = _process$argv$ === undefined ? 'default' : _process$argv$,
     args = _process$argv.slice(3);
 
 var task = (0, _taskfile.read)().find(function (model) {
