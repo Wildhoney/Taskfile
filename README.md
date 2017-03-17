@@ -18,3 +18,5 @@
 * Automatic help page with `taskfile help`
 * Use `npm run *` commands as usual
 * Split up single-line `npm run *` commands
+
+![Demo](media/demo.gif)

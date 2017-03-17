@@ -5,8 +5,11 @@
 
 - name: build
   tasks:
-    - npm run build
+    - webpack
+    - - prepend bin/index.js '#!/usr/bin/env node\n\n'
 
 - name: test
   tasks:
-    - npm run test
+    - nyc ava
+    - - nyc report --reporter=html
+
