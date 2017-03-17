@@ -12118,9 +12118,9 @@ module.exports = require("events");
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
-exports.read = exports.seek = undefined;
+exports.read = exports.seek = exports.isWin32 = undefined;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -12167,17 +12167,23 @@ var multipleSpaces = /\s\s+/g;
 var groupOpen = /\(\s+/g;
 
 /**
+ * @constant isWin32
+ * @type {Boolean}
+ */
+var isWin32 = exports.isWin32 = (0, _os.platform)() === 'win32';
+
+/**
  * @method strip
  * @return {String}
  */
 var strip = (0, _ramda.compose)(function (str) {
-    return str.trim();
+  return str.trim();
 }, function (str) {
-    return str.replace(newLines, '');
+  return str.replace(newLines, '');
 }, function (str) {
-    return str.replace(multipleSpaces, ' ');
+  return str.replace(multipleSpaces, ' ');
 }, function (str) {
-    return str.replace(groupOpen, '(');
+  return str.replace(groupOpen, '(');
 });
 
 /**
@@ -12188,27 +12194,27 @@ var strip = (0, _ramda.compose)(function (str) {
  */
 var parse = function parse(tasks, isWindows) {
 
-    return tasks.reduce(function (xs, task, index) {
+  return tasks.reduce(function (xs, task, index) {
 
-        var isFirst = index === 0;
-        var isLast = index === tasks.length - 1;
-        var isPreviousArray = Array.isArray(tasks[index - 1]);
-        var isNextArray = Array.isArray(tasks[index + 1]);
-        var isSingle = tasks.filter(function (task) {
-            return (0, _ramda.not)(Array.isArray(task));
-        }).length === 1;
+    var isFirst = index === 0;
+    var isLast = index === tasks.length - 1;
+    var isPreviousArray = Array.isArray(tasks[index - 1]);
+    var isNextArray = Array.isArray(tasks[index + 1]);
+    var isSingle = tasks.filter(function (task) {
+      return (0, _ramda.not)(Array.isArray(task));
+    }).length === 1;
 
-        var inaugurator = isWindows || isSingle ? '' : '(';
-        var separator = isWindows || isSingle ? '&&' : isNextArray ? '' : '&';
-        var terminator = isWindows || isSingle ? '' : '& wait)';
+    var inaugurator = isWindows || isSingle ? '' : '(';
+    var separator = isWindows || isSingle ? '&&' : isNextArray ? '' : '&';
+    var terminator = isWindows || isSingle ? '' : '& wait)';
 
-        if (Array.isArray(task) && !isSingle) {
+    if (Array.isArray(task) && !isSingle) {
 
-            return strip('\n                ' + xs + '\n                ' + ((isSingle || !isWindows) && !isFirst && !isPreviousArray ? '&&' : '') + '\n                ' + parse(task, isWindows) + '\n                ' + (isLast ? '' : '&&') + '\n            ');
-        }
+      return strip('\n                ' + xs + '\n                ' + ((isSingle || !isWindows) && !isFirst && !isPreviousArray ? '&&' : '') + '\n                ' + parse(task, isWindows) + '\n                ' + (isLast ? '' : '&&') + '\n            ');
+    }
 
-        return strip('\n            ' + xs + '\n            ' + (isFirst ? inaugurator : '') + '\n            ' + (isPreviousArray ? inaugurator : '') + '\n            ' + task + '\n            ' + (isNextArray ? terminator : '') + '\n            ' + (isLast ? terminator : separator) + '\n        ');
-    }, '');
+    return strip('\n            ' + xs + '\n            ' + (isFirst ? inaugurator : '') + '\n            ' + (isPreviousArray ? inaugurator : '') + '\n            ' + task + '\n            ' + (isNextArray ? terminator : '') + '\n            ' + (isLast ? terminator : separator) + '\n        ');
+  }, '');
 };
 
 /**
@@ -12217,51 +12223,51 @@ var parse = function parse(tasks, isWindows) {
  * @return {Object}
  */
 var seek = exports.seek = function seek() {
-    var file = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : TASKFILE_RC;
+  var file = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : TASKFILE_RC;
 
 
-    /**
-     * @constant find
-     * @param {String} [path = './]]
-     * @param {Number} [iteration = 0]
-     * @return {Object}
-     */
-    var locate = function locate() {
-        var path = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : './';
-        var iteration = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+  /**
+   * @constant find
+   * @param {String} [path = './]]
+   * @param {Number} [iteration = 0]
+   * @return {Object}
+   */
+  var locate = function locate() {
+    var path = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : './';
+    var iteration = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
 
 
-        return iteration > MAX_ITERATIONS ? { found: false } : function (location) {
+    return iteration > MAX_ITERATIONS ? { found: false } : function (location) {
 
-            // Determine if the taskfile exists in the current path.
-            return (0, _fs.existsSync)(location) ? { location: location, path: path, found: true } : locate(path + '../', iteration + 1);
-        }('' + path + file);
-    };
+      // Determine if the taskfile exists in the current path.
+      return (0, _fs.existsSync)(location) ? { location: location, path: path, found: true } : locate(path + '../', iteration + 1);
+    }('' + path + file);
+  };
 
-    return locate();
+  return locate();
 };
 
 /**
  * @method read
  * @param {String} [file = TASKFILE_RC]
- * @param {Boolean} [isWindows = platform() === 'win32']
+ * @param {Boolean} [isWindows = isWin32]
  * @return {String}
  */
 var read = exports.read = function read() {
-    var file = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : TASKFILE_RC;
-    var isWindows = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : (0, _os.platform)() === 'win32';
+  var file = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : TASKFILE_RC;
+  var isWindows = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : isWin32;
 
-    var _seek = seek(file),
-        found = _seek.found,
-        location = _seek.location;
+  var _seek = seek(file),
+      found = _seek.found,
+      location = _seek.location;
 
-    return found ? _jsYaml2.default.safeLoad((0, _fs.readFileSync)(location)).map(function (model) {
+  return found ? _jsYaml2.default.safeLoad((0, _fs.readFileSync)(location)).map(function (model) {
 
-        // Attempt to read the file as YAML.
-        return _extends({}, model, { tasks: Array.isArray(model.tasks) ? parse(model.tasks, isWindows) : [] });
-    }) : function () {
-        throw new Error('Unable to find ' + file + ' relative to the current directory.');
-    }();
+    // Attempt to read the file as YAML.
+    return _extends({}, model, { tasks: Array.isArray(model.tasks) ? parse(model.tasks, isWindows) : [] });
+  }) : function () {
+    throw new Error('Unable to find ' + file + ' relative to the current directory.');
+  }();
 };
 
 /***/ }),
@@ -38669,7 +38675,11 @@ var task = (0, _taskfile.read)().find(function (model) {
     return model.name === name;
 });
 
-task ? (0, _child_process.spawn)('PATH=./node_modules/.bin:$PATH ' + task.tasks, args, { stdio: 'inherit', shell: true }) : function () {
+// Append the 'node_modules' location to the PATH for a single command only.
+var modules = './node_modules/.bin:$PATH';
+var command = _taskfile.isWin32 ? 'cmd /V /C "set PATH=%path%;' + modules + ' && ' + task.tasks : 'PATH=' + modules + ' bash -c \'' + task.tasks + '\'';
+
+task ? (0, _child_process.spawn)(command, args, { stdio: 'inherit', shell: true }) : function () {
 
     // Render error that we're unable to find the desired task.
     var pe = new _prettyError2.default();

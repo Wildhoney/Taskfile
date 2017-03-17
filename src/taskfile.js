@@ -35,6 +35,12 @@ const multipleSpaces = /\s\s+/g;
 const groupOpen = /\(\s+/g;
 
 /**
+ * @constant isWin32
+ * @type {Boolean}
+ */
+export const isWin32 = platform() === 'win32';
+
+/**
  * @method strip
  * @return {String}
  */
@@ -119,10 +125,10 @@ export const seek = (file = TASKFILE_RC) => {
 /**
  * @method read
  * @param {String} [file = TASKFILE_RC]
- * @param {Boolean} [isWindows = platform() === 'win32']
+ * @param {Boolean} [isWindows = isWin32]
  * @return {String}
  */
-export const read = (file = TASKFILE_RC, isWindows = platform() === 'win32') => {
+export const read = (file = TASKFILE_RC, isWindows = isWin32) => {
 
     const { found, location } = seek(file);
 
