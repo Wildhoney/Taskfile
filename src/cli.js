@@ -16,8 +16,8 @@ export const run = task => {
 
     // Append the 'node_modules' location to the PATH for a single command only, and then spawn the selected task.
     const [,,, ...args] = process.argv;
-    const binPath = './node_modules/.bin';
-    const command = isWin32 ? `cmd /V /C "set PATH=%path%;${binPath} && ${task}` : `PATH=${binPath}:$PATH bash -c '${task}'`;
+    const binPath       = './node_modules/.bin';
+    const command       = isWin32 ? `cmd /V /C "set PATH=%path%;${binPath} && ${task}` : `PATH=${binPath}:$PATH bash -c '${task}'`;
     spawn(command, args, { stdio: 'inherit', shell: true });
 
 };
@@ -25,9 +25,8 @@ export const run = task => {
 name === 'help' ? list() : task ? run(task.tasks) : (() => {
 
     // Render error that we're unable to find the desired task.
-    const pe = new PrettyError();
-    const renderedError = pe.render(new Error(`Unable to find the "${name}" task.`));
-    console.log(renderedError);
+    const error = new PrettyError();
+    console.log(error.render(new Error(`Unable to find the "${name}" task.`)));
     process.exit(1);
 
 })();

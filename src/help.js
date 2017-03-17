@@ -24,10 +24,9 @@ export const list = () => {
 
     choices.length > 0 ? prompt(questions).then(answers => answers.script && run(`taskfile ${answers.script}`)) : (() => {
 
-        // Render error that we're unable to find any help choices.
-        const pe = new PrettyError();
-        const renderedError = pe.render(new Error('Unable to find any commands to enumerate.'));
-        console.log(renderedError);
+        // Render the error that we're unable to find any help choices.
+        const error = new PrettyError();
+        console.log(error.render(new Error('Unable to find any commands to enumerate.')));
         process.exit(1);
 
     })();

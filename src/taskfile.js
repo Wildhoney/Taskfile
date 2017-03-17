@@ -42,6 +42,7 @@ export const isWin32 = platform() === 'win32';
 
 /**
  * @method strip
+ * @param * {String}
  * @return {String}
  */
 const strip = compose(
@@ -103,7 +104,7 @@ const parse = (tasks, isWindows) => {
 export const seek = (file = TASKFILE_RC) => {
 
     /**
-     * @constant find
+     * @method locate
      * @param {String} [path = './]]
      * @param {Number} [iteration = 0]
      * @return {Object}

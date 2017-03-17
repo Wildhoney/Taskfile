@@ -27709,6 +27709,7 @@ var isWin32 = exports.isWin32 = (0, _os.platform)() === 'win32';
 
 /**
  * @method strip
+ * @param * {String}
  * @return {String}
  */
 var strip = (0, _ramda.compose)(function (str) {
@@ -27762,7 +27763,7 @@ var seek = exports.seek = function seek() {
 
 
   /**
-   * @constant find
+   * @method locate
    * @param {String} [path = './]]
    * @param {Number} [iteration = 0]
    * @return {Object}
@@ -37909,9 +37910,8 @@ var run = exports.run = function run(task) {
 name === 'help' ? (0, _help.list)() : task ? run(task.tasks) : function () {
 
     // Render error that we're unable to find the desired task.
-    var pe = new _prettyError2.default();
-    var renderedError = pe.render(new Error('Unable to find the "' + name + '" task.'));
-    console.log(renderedError);
+    var error = new _prettyError2.default();
+    console.log(error.render(new Error('Unable to find the "' + name + '" task.')));
     process.exit(1);
 }();
 
@@ -37970,10 +37970,9 @@ var list = exports.list = function list() {
         return answers.script && (0, _cli.run)('taskfile ' + answers.script);
     }) : function () {
 
-        // Render error that we're unable to find any help choices.
-        var pe = new _prettyError2.default();
-        var renderedError = pe.render(new Error('Unable to find any commands to enumerate.'));
-        console.log(renderedError);
+        // Render the error that we're unable to find any help choices.
+        var error = new _prettyError2.default();
+        console.log(error.render(new Error('Unable to find any commands to enumerate.')));
         process.exit(1);
     }();
 };
