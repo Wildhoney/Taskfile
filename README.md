@@ -19,4 +19,4 @@
 * Use `npm run *` commands as usual
 * Split up single-line `npm run *` commands
 
-![Screenshot](media/screenshot.png)
+## Getting Started
