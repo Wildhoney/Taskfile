@@ -38677,7 +38677,7 @@ var task = (0, _taskfile.read)().find(function (model) {
 
 // Append the 'node_modules' location to the PATH for a single command only.
 var modules = './node_modules/.bin:$PATH';
-var command = _taskfile.isWin32 ? 'cmd /V /C "set PATH=%path%;' + modules + ' && ' + task.tasks : 'PATH=' + modules + ' bash -c \'' + task.tasks + '\'';
+var command = task && _taskfile.isWin32 ? 'cmd /V /C "set PATH=%path%;' + modules + ' && ' + task.tasks : 'PATH=' + modules + ' bash -c \'' + task.tasks + '\'';
 
 task ? (0, _child_process.spawn)(command, args, { stdio: 'inherit', shell: true }) : function () {
 
