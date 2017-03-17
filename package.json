@@ -34,9 +34,11 @@
   },
   "homepage": "https://github.com/Wildhoney/Taskfile#readme",
   "dependencies": {
+    "inquirer": "~3.0.5",
     "js-yaml": "~3.7.0",
     "pretty-error": "~2.0.3",
-    "ramda": "~0.23.0"
+    "ramda": "~0.23.0",
+    "sort-by": "~1.1.1"
   },
   "devDependencies": {
     "ava": "~0.17.0",

@@ -1,6 +1,4 @@
 - name: default
-  type: test
-  desc: Run the unit-units.
+  hide: false
   tasks:
     - npm run test
-    - - ls $0
