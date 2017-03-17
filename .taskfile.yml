@@ -1,4 +1,12 @@
 - name: default
-  hide: false
+  tasks:
+    - taskfile test
+    - - taskfile build
+
+- name: build
+  tasks:
+    - npm run build
+
+- name: test
   tasks:
     - npm run test

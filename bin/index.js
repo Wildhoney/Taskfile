@@ -37956,7 +37956,6 @@ var list = exports.list = function list() {
     }).sort((0, _sortBy2.default)('name')).map(function (task) {
         return task.name;
     });
-
     var questions = [{
         type: 'list',
         name: 'script',

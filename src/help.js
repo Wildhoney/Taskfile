@@ -11,8 +11,7 @@ import { read } from './taskfile';
  */
 export const list = () => {
 
-    const choices = read().filter(task => task.hide !== true).sort(by('name')).map(task => task.name);
-
+    const choices   = read().filter(task => task.hide !== true).sort(by('name')).map(task => task.name);
     const questions = [
         {
             type: 'list',
