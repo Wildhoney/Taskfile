@@ -112,10 +112,12 @@ export const seek = (file = TASKFILE_RC) => {
 
         return iteration > MAX_ITERATIONS ? { found: false } : (location => {
 
-            // Determine if the taskfile exists in the current path.
+            // Determine if the taskfile exists in the current path, otherwise keep iterating until we meet
+            // the limit as determined by `MAX_ITERATIONS`.
             return existsSync(location) ? { location, path, found: true } : locate(`${path}../`, iteration + 1);
 
         })(`${path}${file}`);
+
     };
 
     return locate();
