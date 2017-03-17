@@ -8,15 +8,15 @@ const [,, name = 'default', ...args] = process.argv;
 const task = read().find(model => model.name === name);
 
 // Append the 'node_modules' location to the PATH for a single command only.
-const modules = './node_modules/.bin:$PATH';
-const command = task && (isWin32 ? `cmd /V /C "set PATH=%path%;${modules} && ${task.tasks}`
-                                 : `PATH=${modules} bash -c '${task.tasks}'`);
+const binPath = './node_modules/.bin';
+const command = task && (isWin32 ? `cmd /V /C "set PATH=%path%;${binPath} && ${task.tasks}`
+                                 : `PATH=${binPath}:$PATH bash -c '${task.tasks}'`);
 
 task ? spawn(command, args, { stdio: 'inherit', shell: true }) : (() => {
 
     // Render error that we're unable to find the desired task.
     const pe = new PrettyError();
-    const renderedError = pe.render(new Error(`Unable to find a task "${name}".`));
+    const renderedError = pe.render(new Error(`Unable to find the "${name}" task.`));
     console.log(renderedError);
     process.exit(1);
 

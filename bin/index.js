@@ -38685,7 +38685,7 @@ task ? (0, _child_process.spawn)(command, args, { stdio: 'inherit', shell: true 
 
     // Render error that we're unable to find the desired task.
     var pe = new _prettyError2.default();
-    var renderedError = pe.render(new Error('Unable to find a task "' + name + '".'));
+    var renderedError = pe.render(new Error('Unable to find the "' + name + '" task.'));
     console.log(renderedError);
     process.exit(1);
 }();

@@ -1,6 +1,6 @@
-- name: example
+- name: default
   type: test
   desc: Run the unit-units.
   tasks:
     - npm run test
-    - npm run test
+    - - ls $0
