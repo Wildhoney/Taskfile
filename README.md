@@ -20,3 +20,35 @@
 * Split up single-line `npm run *` commands
 
 ## Getting Started
+
+Taskfile begins with the creation of a YAML configuration file named `.taskfile.yml` that should ideally reside in the root of your project &ndash; although Taskfile will recursively find the `.taskfile.yml` file 10 levels up, which means you're able to invoke `taskfile` from *anywhere*.
+
+```yaml
+- name: default
+  tasks:
+    - taskfile test
+    - - taskfile build
+
+- name: build
+  tasks:
+    - webpack
+    - - prepend bin/index.js '#!/usr/bin/env node\n\n'
+
+- name: test
+  tasks:
+    - nyc ava
+    - - nyc report --reporter=html
+```
+
+Using the `.taskfile.yml` file above, we have setup three tasks: `taskfile [default]` (`default` is entirely optional), `taskfile build` and `taskfile test` that will run through their associated commands consecutively.
+
+You should then define the aforementioned commands in **package.json's** `script` object.
+
+```json
+{
+    "scripts": {
+      "build": "taskfile build",
+      "test": "taskfile test"
+    }
+}
+```
