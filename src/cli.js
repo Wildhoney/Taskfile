@@ -4,7 +4,7 @@ import { read, isWin32 } from './taskfile';
 import { list } from './help';
 
 // Take the name of the task, and then attempt to find the associated line in the YAML config.
-const [,, name = 'default'] = process.argv;
+const [,, name = null] = process.argv;
 const task = read().find(model => model.name === name);
 
 /**
@@ -22,7 +22,7 @@ export const run = task => {
 
 };
 
-name === 'help' ? list() : task ? run(task.tasks) : (() => {
+!name ? list() : task ? run(task.tasks) : (() => {
 
     // Render error that we're unable to find the desired task.
     const error = new PrettyError();
