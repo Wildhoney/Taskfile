@@ -1,8 +1,3 @@
-- name: default
-  tasks:
-    - taskfile test
-    - - taskfile build
-
 - name: build
   tasks:
     - webpack
@@ -12,4 +7,3 @@
   tasks:
     - nyc ava
     - - nyc report --reporter=html
-

@@ -21,14 +21,9 @@
 
 ## Getting Started
 
-Taskfile begins with the creation of a YAML configuration file named `.taskfile.yml` that should ideally reside in the root of your project &ndash; although Taskfile will recursively find the `.taskfile.yml` file 10 levels up, which means you're able to invoke `taskfile` from *anywhere*.
+By creating a file named `.taskfile.yml` in your project's root directory, you're able to define the various tasks that Taskfile will respond to.
 
 ```yaml
-- name: default
-  tasks:
-    - taskfile test
-    - - taskfile build
-
 - name: build
   tasks:
     - webpack
@@ -40,9 +35,9 @@ Taskfile begins with the creation of a YAML configuration file named `.taskfile.
     - - nyc report --reporter=html
 ```
 
-Using the `.taskfile.yml` file above, we have setup three tasks: `taskfile [default]` (`default` is entirely optional), `taskfile build` and `taskfile test` that will run through their associated commands consecutively.
+We have setup two tasks: `taskfile build` and `taskfile test` that will run through their associated tasks consecutively &ndash; we also get `taskfile` which will present users with a list of available tasks.
 
-You should then define the aforementioned commands in **package.json's** `script` object.
+Taskfile should **not** be installed globally, and as such you're encouraged to place the tasks in your <kbd>package.json</kbd>.
 
 ```json
 {
@@ -52,3 +47,15 @@ You should then define the aforementioned commands in **package.json's** `script
     }
 }
 ```
+
+We've specified the tasks consecutively in the `.taskfile.yml` file by utilising nested arrays, however we could quite easily set the tasks up concurrently if each tasks doesn't depend on the finishing of the previous. For instance, we could augment our `test` task to spec and lint at the **same** time.
+
+```yaml
+- name: test
+- tasks:
+    - xo **/*.js
+    - nyc ava
+    - - nyc report --reporter=html
+```
+
+Using the above approach our `xo` and `nyc` tasks run concurrently, and once the `nyc` task finishes, it produces a HTML report of test coverage.
