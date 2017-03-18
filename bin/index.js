@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 module.exports =
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -37883,7 +37885,7 @@ function _toArray(arr) { return Array.isArray(arr) ? arr : Array.from(arr); }
 // Take the name of the task, and then attempt to find the associated line in the YAML config.
 var _process$argv = _slicedToArray(process.argv, 3),
     _process$argv$ = _process$argv[2],
-    name = _process$argv$ === undefined ? 'default' : _process$argv$;
+    name = _process$argv$ === undefined ? null : _process$argv$;
 
 var task = (0, _taskfile.read)().find(function (model) {
     return model.name === name;
@@ -37905,7 +37907,7 @@ var run = exports.run = function run(task) {
     (0, _child_process.spawn)(command, args, { stdio: 'inherit', shell: true });
 };
 
-name === 'help' ? (0, _help.list)() : task ? run(task.tasks) : function () {
+!name ? (0, _help.list)() : task ? run(task.tasks) : function () {
 
     // Render error that we're unable to find the desired task.
     var error = new _prettyError2.default();
