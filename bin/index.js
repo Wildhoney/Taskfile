@@ -27785,20 +27785,33 @@ var seek = exports.seek = function seek() {
 };
 
 /**
+ * @method env
+ * @param {String} environment
+ * @return {Function}
+ */
+var env = function env(environment) {
+  return function (model) {
+    return environment === (model.env || '');
+  };
+};
+
+/**
  * @method read
  * @param {String} [file = TASKFILE_RC]
+ * @param {String} [environment = '']
  * @param {Boolean} [isWindows = isWin32]
  * @return {String}
  */
 var read = exports.read = function read() {
   var file = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : TASKFILE_RC;
-  var isWindows = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : isWin32;
+  var environment = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : process.env.NODE_ENV;
+  var isWindows = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : isWin32;
 
   var _seek = seek(file),
       found = _seek.found,
       location = _seek.location;
 
-  return found ? _jsYaml2.default.safeLoad((0, _fs.readFileSync)(location)).map(function (model) {
+  return found ? _jsYaml2.default.safeLoad((0, _fs.readFileSync)(location)).filter(env(environment)).map(function (model) {
 
     // Attempt to read the file as YAML.
     var tasks = model.task || model.tasks && Array.isArray(model.tasks) ? model.task ? [model.task] : model.tasks : [];
