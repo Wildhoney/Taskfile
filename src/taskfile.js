@@ -137,7 +137,7 @@ const env = environment => {
 /**
  * @method read
  * @param {String} [file = TASKFILE_RC]
- * @param {String} [environment = '']
+ * @param {String} [environment = process.env.NODE_ENV]
  * @param {Boolean} [isWindows = isWin32]
  * @return {String}
  */
