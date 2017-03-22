@@ -27790,8 +27790,10 @@ var seek = exports.seek = function seek() {
  * @return {Function}
  */
 var env = function env(environment) {
-  return function (model) {
-    return environment === (model.env || '');
+  return function (_ref) {
+    var _ref$env = _ref.env,
+        env = _ref$env === undefined ? '' : _ref$env;
+    return env === '' || environment === env;
   };
 };
 
