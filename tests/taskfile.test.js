@@ -31,9 +31,9 @@ test('should be able to find the .taskfile.yml with backwards recursion;', t => 
 
 });
 
-test('should be able to handle a single command;', t => {
+test('should be able to handle a simple single command;', t => {
 
-    const [firstTask] = read('./tests/mock/single.yml', false);
+    const [firstTask] = read('./tests/mock/simple.yml', false);
     t.is(firstTask.tasks, 'npm run js');
 
 });
@@ -74,7 +74,6 @@ test('should be able to handle a mixture of consecutive and concurrent;', t => {
 
 });
 
-
 test('should be able to handle a nested mixture of consecutive and concurrent;', t => {
 
     // Linux, OSX, etc...
@@ -84,5 +83,17 @@ test('should be able to handle a nested mixture of consecutive and concurrent;',
     // Windows.
     const [secondTask] = read('./tests/mock/nested.yml', true);
     t.is(secondTask.tasks, 'npm run spec && npm run coverage && npm run lint && npm run headless && npm run js && npm run sass && npm run images && npm run clean && npm run notify');
+
+});
+
+test('should be able to handle a single task using "task";', t => {
+
+    // Linux, OSX, etc...
+    const [firstTask] = read('./tests/mock/single.yml', false);
+    t.is(firstTask.tasks, 'npm run spec');
+
+    // Windows.
+    const [secondTask] = read('./tests/mock/single.yml', true);
+    t.is(secondTask.tasks, 'npm run spec');
 
 });

@@ -1,2 +1,1 @@
-- tasks:
-    - npm run js
+- task: npm run spec

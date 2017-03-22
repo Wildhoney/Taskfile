@@ -138,7 +138,8 @@ export const read = (file = TASKFILE_RC, isWindows = isWin32) => {
     return found ? yaml.safeLoad(readFileSync(location)).map(model => {
 
         // Attempt to read the file as YAML.
-        return { ...model, tasks: Array.isArray(model.tasks) ? parse(model.tasks, isWindows) : [] };
+        const tasks = (model.task || (model.tasks && Array.isArray(model.tasks))) ? (model.task ? [model.task] : model.tasks) : [];
+        return { ...model, tasks: parse(tasks, isWindows) };
 
     }) : (() => { throw new Error(`Unable to find ${file} relative to the current directory.`); })();
 
