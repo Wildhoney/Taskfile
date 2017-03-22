@@ -1,0 +1,10 @@
+- env: development
+  tasks:
+    - npm run build --source-map
+
+- env: production
+  tasks:
+    - npm run build --minify
+
+- tasks:
+    - npm run build

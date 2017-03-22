@@ -126,16 +126,26 @@ export const seek = (file = TASKFILE_RC) => {
 };
 
 /**
+ * @method env
+ * @param {String} environment
+ * @return {Function}
+ */
+const env = environment => {
+    return model => environment === (model.env || '');
+};
+
+/**
  * @method read
  * @param {String} [file = TASKFILE_RC]
+ * @param {String} [environment = '']
  * @param {Boolean} [isWindows = isWin32]
  * @return {String}
  */
-export const read = (file = TASKFILE_RC, isWindows = isWin32) => {
+export const read = (file = TASKFILE_RC, environment = process.env.NODE_ENV, isWindows = isWin32) => {
 
     const { found, location } = seek(file);
 
-    return found ? yaml.safeLoad(readFileSync(location)).map(model => {
+    return found ? yaml.safeLoad(readFileSync(location)).filter(env(environment)).map(model => {
 
         // Attempt to read the file as YAML.
         const tasks = (model.task || (model.tasks && Array.isArray(model.tasks))) ? (model.task ? [model.task] : model.tasks) : [];
