@@ -5,5 +5,5 @@
 
 - name: test
   tasks:
-    - nyc ava
+    - NODE_ENV= nyc ava
     - - nyc report --reporter=html
