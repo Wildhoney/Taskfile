@@ -27801,7 +27801,8 @@ var read = exports.read = function read() {
   return found ? _jsYaml2.default.safeLoad((0, _fs.readFileSync)(location)).map(function (model) {
 
     // Attempt to read the file as YAML.
-    return _extends({}, model, { tasks: Array.isArray(model.tasks) ? parse(model.tasks, isWindows) : [] });
+    var tasks = model.task || model.tasks && Array.isArray(model.tasks) ? model.task ? [model.task] : model.tasks : [];
+    return _extends({}, model, { tasks: parse(tasks, isWindows) });
   }) : function () {
     throw new Error('Unable to find ' + file + ' relative to the current directory.');
   }();
