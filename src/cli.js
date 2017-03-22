@@ -5,7 +5,7 @@ import { list } from './help';
 
 // Take the name of the task, and then attempt to find the associated line in the YAML config.
 const [,, name = null] = process.argv;
-const task = read().find(model => model.name === name);
+const task             = read().find(model => model.name === name);
 
 /**
  * @method run
