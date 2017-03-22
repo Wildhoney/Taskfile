@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "webpack && prepend bin/index.js '#!/usr/bin/env node\n\n'",
-    "test": "nyc ava && npm run report",
+    "test": "NODE_ENV= nyc ava && npm run report",
     "report": "nyc report --reporter=html"
   },
   "bin": {

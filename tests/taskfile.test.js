@@ -108,8 +108,12 @@ test('should be able to determine the command based on the NODE_ENV variable;', 
     const [secondTask] = read('./tests/mock/environment.yml', 'production', true);
     t.is(secondTask.tasks, 'npm run build --minify');
 
-    // NODE_ENV is undefined.
+    // NODE_ENV is an empty string.
     const [thirdTask] = read('./tests/mock/environment.yml', '', true);
     t.is(thirdTask.tasks, 'npm run build');
+
+    // NODE_ENV is undefined.
+    const [fourthTask] = read('./tests/mock/environment.yml', undefined, true);
+    t.is(fourthTask.tasks, 'npm run build');
 
 });

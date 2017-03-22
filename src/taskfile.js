@@ -131,7 +131,7 @@ export const seek = (file = TASKFILE_RC) => {
  * @return {Function}
  */
 const env = environment => {
-    return model => environment === (model.env || '');
+    return ({ env = '' }) => env === '' || environment === env;
 };
 
 /**
