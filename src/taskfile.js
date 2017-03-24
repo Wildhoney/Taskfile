@@ -36,7 +36,7 @@ const normalise = tasks  => {
         }
 
         const [rest, last] = [R.init(xs), (R.last(xs) || [])];
-        return [ ...rest, [...last, task] ];
+        return [...rest, [...last, task]];
 
     }, []);
 
