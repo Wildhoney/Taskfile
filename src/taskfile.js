@@ -1,8 +1,10 @@
 import { readFileSync } from 'fs';
-import { compose, not } from 'ramda';
+import R from 'ramda';
 import { platform } from 'os';
 import { existsSync } from 'fs';
+import { spawn } from 'child_process';
 import yaml from 'js-yaml';
+import execa from 'execa';
 
 /**
  * @constant TASKFILE_RC
@@ -17,48 +19,11 @@ const TASKFILE_RC = '.taskfile.yml';
 const MAX_ITERATIONS = 10;
 
 /**
- * @constant newLines
- * @type {RegExp}
- */
-const newLines = /\r?\n|\r/g;
-
-/**
- * @constant multipleSpaces
- * @type {RegExp}
- */
-const multipleSpaces = /\s\s+/g;
-
-/**
- * @constant groupOpen
- * @type {RegExp}
- */
-const groupOpen = /\(\s+/g;
-
-/**
- * @constant isWin32
- * @type {Boolean}
- */
-export const isWin32 = platform() === 'win32';
-
-/**
- * @method strip
- * @param * {String}
- * @return {String}
- */
-const strip = compose(
-    str => str.trim(),
-    str => str.replace(newLines, ''),
-    str => str.replace(multipleSpaces, ' '),
-    str => str.replace(groupOpen, '(')
-);
-
-/**
- * @method parse
+ * @method normalise
  * @param {Array} tasks
- * @param {Boolean} [isWindows]
- * @return {String}
+ * @return {Array}
  */
-const parse = (tasks, isWindows) => {
+const normalise = tasks  => {
 
     return tasks.reduce((xs, task, index) => {
 
@@ -66,33 +31,32 @@ const parse = (tasks, isWindows) => {
         const isLast          = index === (tasks.length - 1);
         const isPreviousArray = Array.isArray(tasks[index - 1]);
         const isNextArray     = Array.isArray(tasks[index + 1]);
-        const isSingle        = tasks.filter(task => not(Array.isArray(task))).length === 1;
+        const isSingle        = tasks.filter(task => R.not(Array.isArray(task))).length === 1;
 
-        const inaugurator = isWindows || isSingle ? '' : '(';
-        const separator   = isWindows || isSingle ? '&&' : (isNextArray ? '' : '&');
-        const terminator  = isWindows || isSingle ? '' : '& wait)';
-
-        if (Array.isArray(task) && !isSingle) {
-
-            return strip(`
-                ${xs}
-                ${(isSingle || !isWindows) && (!isFirst && !isPreviousArray) ? '&&' : ''}
-                ${parse(task, isWindows)}
-                ${isLast ? '' : '&&'}
-            `);
-
+        if (Array.isArray(task) || isPreviousArray) {
+            return [...xs, ...normalise(Array.isArray(task) ? task : [task])];
         }
 
-        return strip(`
-            ${xs}
-            ${isFirst ? inaugurator : ''}
-            ${isPreviousArray ? inaugurator : ''}
-            ${task}
-            ${isNextArray ? terminator : ''}
-            ${isLast ? terminator : separator}
-        `);
+        const [a, b] = [R.init(xs), (R.last(xs) || [])];
+        return [ ...a, [...b, task] ];
 
-    }, '');
+    }, []);
+
+};
+
+/**
+ * @method exec
+ * @param {Array} tasks
+ * @return {Promise}
+ */
+export const exec = tasks => {
+
+    return new Promise(resolve => {
+
+        // execa('npm', ['run', 'build'], { stdio: 'inherit' }).then(resolve);
+        execa('prepend', [`bin/index.js`, `#!/usr/bin/env node\n\n`], { stdio: 'inherit' }).then(resolve);
+
+    });
 
 };
 
@@ -126,6 +90,13 @@ export const seek = (file = TASKFILE_RC) => {
 };
 
 /**
+ * @method parse
+ * @param {String} file
+ * @return {Array}
+ */
+const parse = file => yaml.safeLoad(readFileSync(file));
+
+/**
  * @method env
  * @param {String} environment
  * @return {Function}
@@ -138,19 +109,14 @@ const env = environment => {
  * @method read
  * @param {String} [file = TASKFILE_RC]
  * @param {String} [environment = process.env.NODE_ENV]
- * @param {Boolean} [isWindows = isWin32]
- * @return {String}
+ * @return {Array}
  */
-export const read = (file = TASKFILE_RC, environment = process.env.NODE_ENV, isWindows = isWin32) => {
+export const read = (file = TASKFILE_RC, environment = process.env.NODE_ENV) => {
 
     const { found, location } = seek(file);
 
-    return found ? yaml.safeLoad(readFileSync(location)).filter(env(environment)).map(model => {
-
-        // Attempt to read the file as YAML.
-        const tasks = (model.task || (model.tasks && Array.isArray(model.tasks))) ? (model.task ? [model.task] : model.tasks) : [];
-        return { ...model, tasks: parse(tasks, isWindows) };
-
+    return found ? parse(location).filter(env(environment)).map(model => {
+        return R.omit(['task'], { ...model, tasks: normalise(model.task ? [model.task] : (model.tasks || [])) });
     }) : (() => { throw new Error(`Unable to find ${file} relative to the current directory.`); })();
 
 };
