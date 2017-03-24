@@ -30383,9 +30383,7 @@ var read = exports.read = function read() {
 
         var tasks = normalise([].concat(model.task || model.tasks));
         return _ramda2.default.omit(['task'], _extends({}, model, { tasks: tasks }));
-    }) : function () {
-        throw new Error('Unable to find ' + file + ' relative to the current directory.');
-    }();
+    }) : error('Unable to find ' + file + ' relative to the current directory.');
 };
 
 /***/ }),

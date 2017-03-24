@@ -144,6 +144,6 @@ export const read = (file = TASKFILE_RC, environment = process.env.NODE_ENV) => 
         const tasks = normalise([].concat(model.task || model.tasks));
         return R.omit(['task'], { ...model, tasks });
 
-    }): do { throw new Error(`Unable to find ${file} relative to the current directory.`); }
+    }) : error(`Unable to find ${file} relative to the current directory.`);
 
 };
