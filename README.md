@@ -9,7 +9,7 @@
 &nbsp;
 ![npm](http://img.shields.io/npm/v/taskfile.svg?style=flat-square)
 &nbsp;
-![License MIT](https://img.shields.io/badge/license-gpl3-lightgrey.svg?style=flat-square)
+![License MIT](https://img.shields.io/badge/license-GPL3-lightgrey.svg?style=flat-square)
 
 - [x] Specify pure Bash commands in [YAML](http://yaml.org/)
 - [x] Run tasks concurrently and consecutively
@@ -37,7 +37,7 @@ By creating a file named `.taskfile.yml` in your project's root directory, you'r
 
 We have setup two tasks: `taskfile build` and `taskfile test` that will run through their associated tasks consecutively &ndash; we also get `taskfile` which will present users with a list of available tasks.
 
-Taskfile should **not** be installed globally, and as such you're encouraged to place the tasks in your <kbd>package.json</kbd>.
+Taskfile should **not** be installed globally, and as such you're encouraged to place the tasks in your **package.json**.
 
 ```json
 {
