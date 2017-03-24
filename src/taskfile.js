@@ -37,8 +37,8 @@ const normalise = tasks  => {
             return [...xs, ...normalise(Array.isArray(task) ? task : [task])];
         }
 
-        const [a, b] = [R.init(xs), (R.last(xs) || [])];
-        return [ ...a, [...b, task] ];
+        const [rest, last] = [R.init(xs), (R.last(xs) || [])];
+        return [ ...rest, [...last, task] ];
 
     }, []);
 
