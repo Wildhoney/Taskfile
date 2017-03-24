@@ -1,13 +1,10 @@
-import { readFileSync } from 'fs';
-import R                from 'ramda';
-import { platform }     from 'os';
-import { existsSync }   from 'fs';
-import { spawn }        from 'child_process';
-import yaml             from 'js-yaml';
-import execa            from 'execa';
-import Queue            from 'orderly-queue';
-import PrettyError      from 'pretty-error';
-import by               from 'sort-by';
+import { readFileSync, existsSync } from 'fs';
+import R                            from 'ramda';
+import yaml                         from 'js-yaml';
+import execa                        from 'execa';
+import Queue                        from 'orderly-queue';
+import PrettyError                  from 'pretty-error';
+import by                           from 'sort-by';
 
 /**
  * @constant TASKFILE_RC

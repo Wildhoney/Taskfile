@@ -1,6 +1,5 @@
 import { prompt }            from 'inquirer';
 import by                    from 'sort-by';
-import { run }               from './cli';
 import { read, exec, error } from './taskfile';
 
 /**
