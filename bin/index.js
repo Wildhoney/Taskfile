@@ -30312,7 +30312,7 @@ var seek = exports.seek = function seek() {
 
     /**
      * @method locate
-     * @param {String} [path = './]]
+     * @param {String} [path = './']
      * @param {Number} [iteration = 0]
      * @return {Object}
      */

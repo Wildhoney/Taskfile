@@ -86,7 +86,7 @@ export const seek = (file = TASKFILE_RC) => {
 
     /**
      * @method locate
-     * @param {String} [path = './]]
+     * @param {String} [path = './']
      * @param {Number} [iteration = 0]
      * @return {Object}
      */
