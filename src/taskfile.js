@@ -6,6 +6,7 @@ import { spawn }        from 'child_process';
 import yaml             from 'js-yaml';
 import execa            from 'execa';
 import Queue            from 'orderly-queue';
+import PrettyError      from 'pretty-error';
 
 /**
  * @constant TASKFILE_RC
@@ -39,6 +40,19 @@ const normalise = tasks  => {
         return [...rest, [...last, task]];
 
     }, []);
+
+};
+
+/**
+ * @method error
+ * @param {String} message
+ * @return {void}
+ */
+export const error = message => {
+
+    const error = new PrettyError();
+    console.log(error.render(new Error(message)));
+    process.exit(1);
 
 };
 
@@ -96,7 +110,7 @@ export const seek = (file = TASKFILE_RC) => {
  * @param {String} file
  * @return {Array}
  */
-const parse = file => yaml.safeLoad(readFileSync(file));
+const parse = file => yaml.safeLoad(readFileSync(file)) || [];
 
 /**
  * @method env
