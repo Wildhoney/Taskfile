@@ -62,7 +62,7 @@ Using the above approach our `xo` and `nyc` tasks run concurrently, and once the
 
 ## Conditional Tasks
 
-It's a common requirement to be able to run tasks conditionally on an environment variable. With Taskfile we have a simple implementation using the `env` key which is validating against the current `NODE_ENV` value.
+It's a common requirement to be able to run tasks conditionally based on an environment variable. With Taskfile we have a simple implementation using the `env` key which is validated against the current `NODE_ENV` value.
 
 ```yaml
 - name: build
@@ -76,4 +76,25 @@ It's a common requirement to be able to run tasks conditionally on an environmen
 
 **Note:** We're using `task` as a more semantic way to run a single task.
 
-Using the above configuration Taskfile will run the relevant task based on the `NODE_ENV` value. However you're also able to set a default for if NODE_ENV is empty by omitting the `env` entirely &ndash; if there is a more specific task that matches the `NODE_ENV` then that will be preferred over the *default* that doesn't specify an `env`.
+Using the above configuration Taskfile will run the relevant task based on the `NODE_ENV` value. However you're also able to set a default for if `NODE_ENV` is empty by omitting the `env` entirely &ndash; if there is a more specific task that matches the `NODE_ENV` then that will be preferred over the *default* that doesn't specify an `env`.
+
+## Task Enumeration
+
+By executing the `taskfile` command from the terminal all tasks in the `.taskfile.yml` file will be enumerated, and runnable using the arrow keys followed by <kbd>enter</kbd>. In some cases however you may wish to omit tasks from the enumeration, which you can do by specifying the `hide` key in the configuration.
+
+```yaml
+- name: test
+  tasks:
+    - taskfile spec
+    - taskfile lint
+  
+- name: spec
+  hide: true
+  task: nyc ava
+  
+- name: lint
+  hide: true
+  task: xo **/*.js
+```
+
+Both `spec` and `lint` will be hidden from the enumeration, although still runnable with `taskfile spec` and `taskfile lint` respectively.
