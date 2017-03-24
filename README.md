@@ -11,13 +11,13 @@
 &nbsp;
 ![License MIT](https://img.shields.io/badge/license-gpl3-lightgrey.svg?style=flat-square)
 
-[x] Specify pure Bash commands in [YAML](http://yaml.org/)
-[x] Run tasks concurrently and consecutively
-[x] Compatible with Windows based systems
-[x] Avoid wrapper bloat such as with [Gulp](http://gulpjs.com/)
-[x] Automatic help page with `taskfile help`
-[x] Choice of tasks with `taskfile`
-[x] Use `npm run *` commands as usual
+- [x] Specify pure Bash commands in [YAML](http://yaml.org/)
+- [x] Run tasks concurrently and consecutively
+- [x] Compatible with Windows based systems
+- [x] Avoid wrapper bloat such as with [Gulp](http://gulpjs.com/)
+- [x] Automatic help page with `taskfile help`
+- [x] Choice of tasks with `taskfile`
+- [x] Use `npm run [task]` commands as usual
 
 ## Getting Started
 
