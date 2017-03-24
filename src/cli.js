@@ -1,7 +1,7 @@
-import { spawn } from 'child_process';
-import PrettyError from 'pretty-error';
+import { spawn }      from 'child_process';
+import PrettyError    from 'pretty-error';
 import { read, exec } from './taskfile';
-import { list } from './help';
+import { list }       from './help';
 
 const [,, name = null] = process.argv;
 const task             = read().find(model => model.name === name);
