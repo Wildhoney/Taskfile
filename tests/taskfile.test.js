@@ -1,16 +1,7 @@
 import test from 'ava';
 import { chdir } from 'process';
 import mock from 'mock-fs';
-import { read, seek } from '../src/taskfile';
-
-test('should be able to read the meta information;', t => {
-
-    const [task] = read('./tests/mock/meta.yml', '');
-    t.is(task.name, 'js');
-    t.is(task.type, 'build');
-    t.is(task.desc, 'Test description.');
-
-});
+import { read, seek, parse } from '../src/taskfile';
 
 test('should be able to find the .taskfile.yml with backwards recursion;', t => {
 
@@ -31,89 +22,77 @@ test('should be able to find the .taskfile.yml with backwards recursion;', t => 
 
 });
 
+test('should be able to read the meta information;', t => {
+    const [task] = read('./tests/mock/meta.yml', '');
+    t.is(task.name, 'js');
+    t.is(task.type, 'build');
+    t.is(task.desc, 'Test description.');
+});
+
 test('should be able to handle a simple single command;', t => {
-
-    const [firstTask] = read('./tests/mock/simple.yml', '', false);
-    t.is(firstTask.tasks, 'npm run js');
-
+    const [task] = read('./tests/mock/simple.yml', '');
+    t.deepEqual(task.tasks, [
+        ['npm run js']
+    ]);
 });
 
 test('should be able to handle simple concurrency;', t => {
-
-    // Linux, OSX, etc...
-    const [firstTask] = read('./tests/mock/concurrent.yml', '', false);
-    t.is(firstTask.tasks, '(npm run js & npm run sass & npm run images & wait)');
-
-    // Windows.
-    const [secondTask] = read('./tests/mock/concurrent.yml', '', true);
-    t.is(secondTask.tasks, 'npm run js && npm run sass && npm run images');
-
+    const [task] = read('./tests/mock/concurrent.yml', '');
+    t.deepEqual(task.tasks, [
+        ['npm run js', 'npm run sass', 'npm run images']
+    ]);
 });
 
 test('should be able to handle simple consecutively;', t => {
-
-    // Linux, OSX, etc...
-    const [firstTask] = read('./tests/mock/consecutive.yml', '', false);
-    t.is(firstTask.tasks, 'npm run js && npm run sass && npm run images');
-
-    // Windows.
-    const [secondTask] = read('./tests/mock/consecutive.yml', '', true);
-    t.is(secondTask.tasks, 'npm run js && npm run sass && npm run images');
-
+    const [task] = read('./tests/mock/consecutive.yml', '');
+    t.deepEqual(task.tasks, [
+        ['npm run js'],
+        ['npm run sass'],
+        ['npm run images']
+    ]);
 });
 
 test('should be able to handle a mixture of consecutive and concurrent;', t => {
-
-    // Linux, OSX, etc...
-    const [firstTask] = read('./tests/mock/mixture.yml', '', false);
-    t.is(firstTask.tasks, '(npm run js & npm run sass & wait) && (npm run spec & npm run lint & wait) && (npm run images & wait)');
-
-    // Windows.
-    const [secondTask] = read('./tests/mock/mixture.yml', '', true);
-    t.is(secondTask.tasks, 'npm run js && npm run sass && npm run spec && npm run lint && npm run images');
-
+    const [task] = read('./tests/mock/mixture.yml', '');
+    t.deepEqual(task.tasks, [
+        ['npm run js', 'npm run sass'],
+        ['npm run spec', 'npm run lint'],
+        ['npm run images']
+    ]);
 });
 
 test('should be able to handle a nested mixture of consecutive and concurrent;', t => {
-
-    // Linux, OSX, etc...
-    const [firstTask] = read('./tests/mock/nested.yml', '', false);
-    t.is(firstTask.tasks, '(npm run spec & wait) && npm run coverage && (npm run lint & npm run headless & wait) && (npm run js & npm run sass & npm run images & wait) && (npm run clean & npm run notify & wait)');
-
-    // Windows.
-    const [secondTask] = read('./tests/mock/nested.yml', '', true);
-    t.is(secondTask.tasks, 'npm run spec && npm run coverage && npm run lint && npm run headless && npm run js && npm run sass && npm run images && npm run clean && npm run notify');
-
+    const [task] = read('./tests/mock/nested.yml', '');
+    t.deepEqual(task.tasks, [
+        ['npm run spec'],
+        ['npm run coverage'],
+        ['npm run lint', 'npm run headless'],
+        ['npm run js', 'npm run sass', 'npm run images'],
+        ['npm run clean', 'npm run notify']
+    ]);
 });
 
 test('should be able to handle a single task using "task";', t => {
-
-    // Linux, OSX, etc...
-    const [firstTask] = read('./tests/mock/single.yml', '', false);
-    t.is(firstTask.tasks, 'npm run spec');
-
-    // Windows.
-    const [secondTask] = read('./tests/mock/single.yml', '', true);
-    t.is(secondTask.tasks, 'npm run spec');
-
+    const [task] = read('./tests/mock/single.yml', '');
+    t.deepEqual(task.tasks, [['npm run spec']]);
 });
 
 test('should be able to determine the command based on the NODE_ENV variable;', t => {
 
     // NODE_ENV is "development".
-    const [firstTask] = read('./tests/mock/environment.yml', 'development', true);
-    t.is(firstTask.tasks, 'npm run build --source-map');
+    const [task] = read('./tests/mock/environment.yml', 'development');
+    t.deepEqual(task.tasks, [['npm run build --source-map']]);
 
     // NODE_ENV is "production".
-    const [secondTask] = read('./tests/mock/environment.yml', 'production', true);
-    t.is(secondTask.tasks, 'npm run build --minify');
+    const [secondTask] = read('./tests/mock/environment.yml', 'production');
+    t.deepEqual(secondTask.tasks, [['npm run build --minify']]);
 
     // NODE_ENV is an empty string.
-    const [thirdTask] = read('./tests/mock/environment.yml', '', true);
-    t.is(thirdTask.tasks, 'npm run build');
+    const [thirdTask] = read('./tests/mock/environment.yml', '');
+    t.deepEqual(thirdTask.tasks, [['npm run build']]);
 
     // NODE_ENV is undefined.
-    const [fourthTask] = read('./tests/mock/environment.yml', undefined, true);
-    t.is(fourthTask.tasks, 'npm run build');
+    const [fourthTask] = read('./tests/mock/environment.yml', undefined);
+    t.deepEqual(fourthTask.tasks, [['npm run build']]);
 
 });
