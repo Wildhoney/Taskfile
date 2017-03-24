@@ -52,10 +52,28 @@ We've specified the tasks consecutively in the `.taskfile.yml` file by utilising
 
 ```yaml
 - name: test
-- tasks:
+  tasks:
     - xo **/*.js
     - nyc ava
     - - nyc report --reporter=html
 ```
 
 Using the above approach our `xo` and `nyc` tasks run concurrently, and once the `nyc` task finishes, it produces a HTML report of test coverage.
+
+## Conditional Tasks
+
+It's a common requirement to be able to run tasks conditionally on an environment variable. With Taskfile we have a simple implementation using the `env` key which is validating against the current `NODE_ENV` value.
+
+```yaml
+- name: build
+  env: development
+  task: webpack -d
+  
+- name: build
+  env: production
+  task: webpack -p
+```
+
+**Note:** We're using `task` as a more semantic way to run a single task.
+
+Using the above configuration Taskfile will run the relevant task based on the `NODE_ENV` value. However you're also able to set a default for if NODE_ENV is empty by omitting the `env` entirely &ndash; if there is a more specific task that matches the `NODE_ENV` then that will be preferred over the *default* that doesn't specify an `env`.
