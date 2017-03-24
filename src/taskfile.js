@@ -31,7 +31,7 @@ const normalise = tasks  => {
         const isPreviousArray = Array.isArray(tasks[index - 1]);
 
         if (isCurrentArray || isPreviousArray) {
-            return [...xs, ...normalise(isCurrentArray ? task : [task])];
+            return [...xs, ...normalise([].concat(task))];
         }
 
         const [rest, last] = [R.init(xs), (R.last(xs) || [])];
@@ -113,7 +113,10 @@ export const read = (file = TASKFILE_RC, environment = process.env.NODE_ENV) => 
     const { found, location } = seek(file);
 
     return found ? parse(location).filter(env(environment)).map(model => {
-        return R.omit(['task'], { ...model, tasks: normalise(model.task ? [model.task] : (model.tasks || [])) });
-    }) : (() => { throw new Error(`Unable to find ${file} relative to the current directory.`); })();
+
+        const tasks = normalise([].concat(model.task || model.tasks));
+        return R.omit(['task'], { ...model, tasks });
+
+    }): do { throw new Error(`Unable to find ${file} relative to the current directory.`); }
 
 };
