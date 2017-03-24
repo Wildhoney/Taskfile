@@ -54,6 +54,7 @@
     "nyc": "~10.0.0",
     "orderly-queue": "~0.1.10",
     "prepend-file-cli": "~1.0.6",
+    "sort-by": "~1.1.1",
     "webpack": "~2.2.1"
   },
   "ava": {

@@ -7,6 +7,7 @@ import yaml             from 'js-yaml';
 import execa            from 'execa';
 import Queue            from 'orderly-queue';
 import PrettyError      from 'pretty-error';
+import by               from 'sort-by';
 
 /**
  * @constant TASKFILE_RC
@@ -106,13 +107,6 @@ export const seek = (file = TASKFILE_RC) => {
 };
 
 /**
- * @method parse
- * @param {String} file
- * @return {Array}
- */
-const parse = file => yaml.safeLoad(readFileSync(file)) || [];
-
-/**
  * @method env
  * @param {String} environment
  * @return {Function}
@@ -131,7 +125,21 @@ export const read = (file = TASKFILE_RC, environment = process.env.NODE_ENV) => 
 
     const { found, location } = seek(file);
 
-    return found ? parse(location).filter(env(environment)).map(model => {
+    /**
+     * @method parse
+     * @param {String} file
+     * @return {Array}
+     */
+    const parse = file => yaml.safeLoad(readFileSync(file)) || [];
+
+    /**
+     * @method fill
+     * @param {Object} model
+     * @return {Object}
+     */
+    const fill = model => ({ env: '', ...model });
+
+    return found ? parse(location).filter(env(environment)).map(fill).sort(by('-env')).map(model => {
 
         const tasks = normalise([].concat(model.task || model.tasks));
         return R.omit(['task'], { ...model, tasks });
