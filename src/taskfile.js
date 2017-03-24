@@ -27,14 +27,11 @@ const normalise = tasks  => {
 
     return tasks.reduce((xs, task, index) => {
 
-        const isFirst         = index === 0;
-        const isLast          = index === (tasks.length - 1);
+        const isCurrentArray  = Array.isArray(task);
         const isPreviousArray = Array.isArray(tasks[index - 1]);
-        const isNextArray     = Array.isArray(tasks[index + 1]);
-        const isSingle        = tasks.filter(task => R.not(Array.isArray(task))).length === 1;
 
-        if (Array.isArray(task) || isPreviousArray) {
-            return [...xs, ...normalise(Array.isArray(task) ? task : [task])];
+        if (isCurrentArray || isPreviousArray) {
+            return [...xs, ...normalise(isCurrentArray ? task : [task])];
         }
 
         const [rest, last] = [R.init(xs), (R.last(xs) || [])];
