@@ -1,10 +1,11 @@
 import { readFileSync } from 'fs';
-import R from 'ramda';
-import { platform } from 'os';
-import { existsSync } from 'fs';
-import { spawn } from 'child_process';
-import yaml from 'js-yaml';
-import execa from 'execa';
+import R                from 'ramda';
+import { platform }     from 'os';
+import { existsSync }   from 'fs';
+import { spawn }        from 'child_process';
+import yaml             from 'js-yaml';
+import execa            from 'execa';
+import Queue            from 'orderly-queue';
 
 /**
  * @constant TASKFILE_RC
@@ -46,12 +47,16 @@ const normalise = tasks  => {
  * @param {Array} tasks
  * @return {Promise}
  */
-export const exec = tasks => {
+export const exec = async tasks => {
 
-    return new Promise(resolve => {
+    const queue         = new Queue();
+    const [,,, ...args] = process.argv;
 
-        // execa('npm', ['run', 'build'], { stdio: 'inherit' }).then(resolve);
-        execa('prepend', [`bin/index.js`, `#!/usr/bin/env node\n\n`], { stdio: 'inherit' }).then(resolve);
+    return tasks.map(group => {
+
+        return queue.process(() => Promise.all(group.map(task => {
+            return execa.shell(`${task} ${args.join(' ')}`, { stdio: 'inherit' });
+        })));
 
     });
 

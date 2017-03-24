@@ -1,8 +1,9 @@
-import { prompt }     from 'inquirer';
-import PrettyError    from 'pretty-error';
-import by             from 'sort-by';
-import { run }        from './cli';
-import { read, exec } from './taskfile';
+import { prompt } from 'inquirer';
+import { exec } from 'child_process';
+import PrettyError from 'pretty-error';
+import by from 'sort-by';
+import { run } from './cli';
+import { read } from './taskfile';
 
 /**
  * @method list
@@ -21,18 +22,13 @@ export const list = () => {
         }
     ];
 
-    choices.length > 0 ? prompt(questions).then(answers => {
-
-        const task = read().find(model => model.name === answers.script);
-        answers.script && exec(task.tasks);
-
-    }) : do {
+    choices.length > 0 ? prompt(questions).then(answers => answers.script && run(`taskfile ${answers.script}`)) : (() => {
 
         // Render the error that we're unable to find any help choices.
         const error = new PrettyError();
         console.log(error.render(new Error('Unable to find any commands to enumerate.')));
         process.exit(1);
 
-    };
+    })();
 
 };
