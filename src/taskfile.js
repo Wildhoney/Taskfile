@@ -1,10 +1,10 @@
-import { readFileSync, existsSync } from 'fs';
-import R                            from 'ramda';
-import yaml                         from 'js-yaml';
-import execa                        from 'execa';
-import Queue                        from 'orderly-queue';
-import PrettyError                  from 'pretty-error';
-import by                           from 'sort-by';
+import fs          from 'fs';
+import R           from 'ramda';
+import yaml        from 'js-yaml';
+import execa       from 'execa';
+import Queue       from 'orderly-queue';
+import PrettyError from 'pretty-error';
+import by          from 'sort-by';
 
 /**
  * @constant TASKFILE_RC
@@ -93,7 +93,7 @@ export const seek = (file = TASKFILE_RC) => {
 
             // Determine if the taskfile exists in the current path, otherwise keep iterating until we meet
             // the limit as determined by `MAX_ITERATIONS`.
-            return existsSync(location) ? { location, path, found: true } : locate(`${path}../`, iteration + 1);
+            return fs.existsSync(location) ? { location, path, found: true } : locate(`${path}../`, iteration + 1);
 
         })(`${path}${file}`);
 
@@ -108,9 +108,16 @@ export const seek = (file = TASKFILE_RC) => {
  * @param {String} environment
  * @return {Function}
  */
-const env = environment => {
+export const env = environment => {
     return ({ env = '' }) => env === '' || environment === env;
 };
+
+/**
+ * @method fill
+ * @param {Object} model
+ * @return {Object}
+ */
+export const fill = model => ({ env: '', ...model });
 
 /**
  * @method read
@@ -127,20 +134,13 @@ export const read = (file = TASKFILE_RC, environment = process.env.NODE_ENV) => 
      * @param {String} file
      * @return {Array}
      */
-    const parse = file => yaml.safeLoad(readFileSync(file)) || [];
-
-    /**
-     * @method fill
-     * @param {Object} model
-     * @return {Object}
-     */
-    const fill = model => ({ env: '', ...model });
+    const parse = file => yaml.safeLoad(fs.readFileSync(file)) || [];
 
     return found ? parse(location).filter(env(environment)).map(fill).sort(by('-env')).map(model => {
 
         const tasks = normalise([].concat(model.task || model.tasks));
         return R.omit(['task'], { ...model, tasks });
 
-    }) : error(`Unable to find ${file} relative to the current directory.`);
+    }) : error(`Unable to find "${file}" relative to the current directory.`);
 
 };
