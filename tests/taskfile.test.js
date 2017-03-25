@@ -1,7 +1,7 @@
 import test from 'ava';
 import { chdir } from 'process';
 import mock from 'mock-fs';
-import { read, seek, parse } from '../src/taskfile';
+import { read, seek, fill, env } from '../src/taskfile';
 
 test('should be able to find the .taskfile.yml with backwards recursion;', t => {
 
@@ -20,6 +20,17 @@ test('should be able to find the .taskfile.yml with backwards recursion;', t => 
 
     mock.restore();
 
+});
+
+test('should be able to fill in the `env` if unset;', t => {
+    t.deepEqual(fill({ name: 'test' }), { name: 'test', env: '' });
+    t.deepEqual(fill({ name: 'test', env: 'development' }), { name: 'test', env: 'development' });
+});
+
+test('should be able to match against the environment variable;', t => {
+    t.true(env('development')({ env: '' }));
+    t.true(env('development')({ env: 'development' }));
+    t.false(env('development')({ env: 'production' }));
 });
 
 test('should be able to read the meta information;', t => {
