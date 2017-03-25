@@ -1,5 +1,5 @@
 module.exports = {
-    entry: ['babel-polyfill', './src/cli.js'],
+    entry: './src/cli.js',
     target: 'node',
     output: {
         filename: './bin/index.js',
