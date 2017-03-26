@@ -8,18 +8,16 @@ import { read, exec, error } from './taskfile';
  */
 const list = () => {
 
-    const choices   = read().filter(task => task.hide !== true).sort(by('name')).map(task => task.name);
-    const questions = [
-        {
-            type: 'list',
-            name: 'script',
-            message: 'Which task would you like to run?',
-            choices,
-            filter: value => value.toLowerCase()
-        }
-    ];
+    const choices  = read().filter(task => task.hide !== true).sort(by('name')).map(task => task.name);
+    const question = {
+        type: 'list',
+        name: 'script',
+        message: 'Which task would you like to run?',
+        choices,
+        filter: value => value.toLowerCase()
+    };
 
-    choices.length > 0 ? prompt(questions).then(answers => {
+    choices.length > 0 ? prompt([question]).then(answers => {
 
         const task = read().find(model => model.name === answers.script);
         answers.script && exec(task.tasks);
