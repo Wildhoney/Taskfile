@@ -77324,7 +77324,7 @@ var list = function list() {
     }).sort((0, _sortBy2.default)('name')).map(function (task) {
         return task.name;
     });
-    var questions = [{
+    var question = {
         type: 'list',
         name: 'script',
         message: 'Which task would you like to run?',
@@ -77332,9 +77332,9 @@ var list = function list() {
         filter: function filter(value) {
             return value.toLowerCase();
         }
-    }];
+    };
 
-    choices.length > 0 ? (0, _inquirer.prompt)(questions).then(function (answers) {
+    choices.length > 0 ? (0, _inquirer.prompt)([question]).then(function (answers) {
 
         var task = (0, _taskfile.read)().find(function (model) {
             return model.name === answers.script;
