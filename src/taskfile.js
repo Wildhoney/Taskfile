@@ -5,6 +5,7 @@ import execa       from 'execa';
 import Queue       from 'orderly-queue';
 import PrettyError from 'pretty-error';
 import by          from 'sort-by';
+import normaliseNL from 'normalize-newline';
 
 /**
  * @constant TASKFILE_RC
@@ -61,13 +62,25 @@ export const error = message => {
  */
 export const exec = async tasks => {
 
+    /**
+     * @method literals
+     * @param {String} str
+     * @return {String}
+     */
+    const literals = R.compose(
+        str => str.replace(/\\n/ig, '\n'),
+        str => str.replace(/\\r/ig, '\r'),
+        str => str.replace(/\\t/ig, '\t'),
+               normaliseNL
+    );
+
     const queue         = new Queue();
     const [,,, ...args] = process.argv;
 
     return tasks.map(group => {
 
         return queue.process(() => Promise.all(group.map(task => {
-            return execa.shell(`${task} ${args.join(' ')}`, { stdio: 'inherit' });
+            return execa.shell(`${literals(task)} ${args.map(literals).join(' ')}`, { stdio: 'inherit' });
         })));
 
     });

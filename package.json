@@ -54,6 +54,7 @@
     "coveralls": "~2.11.15",
     "execa": "~0.6.2",
     "mock-fs": "~4.2.0",
+    "normalize-newline": "~3.0.0",
     "nyc": "~10.0.0",
     "orderly-queue": "~0.1.10",
     "prepend-file-cli": "~1.0.6",
