@@ -18,10 +18,8 @@ const list = () => {
     };
 
     choices.length > 0 ? prompt([question]).then(answers => {
-
         const task = read().find(model => model.name === answers.script);
         answers.script && exec(task.tasks);
-
     }) : error('Unable to find any commands to enumerate.');
 
 };
@@ -35,7 +33,8 @@ const main = () => {
     const [,, name = null] = process.argv;
     const task             = read().find(model => model.name === name);
 
-    name ? task ? exec(task.tasks) : error(`Unable to find the "${name}" task.`) : list();
+    // When a name has been specified we'll run the associated task, otherwise list all of the available tasks.
+    name ? (task ? exec(task.tasks) : error(`Unable to find the "${name}" task.`)) : list();
 
 };
 

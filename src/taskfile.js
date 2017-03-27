@@ -48,11 +48,9 @@ const normalise = tasks  => {
  * @return {void}
  */
 export const error = message => {
-
     const error = new PrettyError();
     console.log(error.render(new Error(message)));
     process.exit(1);
-
 };
 
 /**
