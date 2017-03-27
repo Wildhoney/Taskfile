@@ -38053,7 +38053,6 @@ var normalise = function normalise(tasks) {
  * @return {void}
  */
 var error = exports.error = function error(message) {
-
     var error = new _prettyError2.default();
     console.log(error.render(new Error(message)));
     process.exit(1);
@@ -77383,7 +77382,6 @@ var list = function list() {
     };
 
     choices.length > 0 ? (0, _inquirer.prompt)([question]).then(function (answers) {
-
         var task = (0, _taskfile.read)().find(function (model) {
             return model.name === answers.script;
         });
@@ -77404,6 +77402,7 @@ var main = function main() {
         return model.name === name;
     });
 
+    // When a name has been specified we'll run the associated task, otherwise list all of the available tasks.
     name ? task ? (0, _taskfile.exec)(task.tasks) : (0, _taskfile.error)('Unable to find the "' + name + '" task.') : list();
 };
 
