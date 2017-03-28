@@ -91,7 +91,7 @@ Using the above configuration Taskfile will run the relevant task based on the `
   task: webpack -p
 ```
 
-In cases where the `NODE_ENV` is empty, the third task will be preferred. However if `NODE_ENV` is either `development` or `production` then the more specific tasks &mdash; those with `env` defined &mdash; will be chosen rather than the default.
+In cases where the `NODE_ENV` is empty, the third task will be preferred. However if `NODE_ENV` is either `development` or `production` then the more specific tasks &mdash; those with `env` defined &mdash; will be chosen rather than the default irrespective of the ordering of the tasks.
 
 ## Task Enumeration
 
