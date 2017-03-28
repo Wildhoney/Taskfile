@@ -78,6 +78,21 @@ It's a common requirement to be able to run tasks conditionally based on an envi
 
 Using the above configuration Taskfile will run the relevant task based on the `NODE_ENV` value. However you're also able to set a default for if `NODE_ENV` is empty by omitting the `env` entirely &ndash; if there is a more specific task that matches the `NODE_ENV` then that will be preferred over the *default* that doesn't specify an `env`.
 
+```yaml
+- name: build
+  task: webpack
+  
+- name: build
+  env: development
+  task: webpack -d
+  
+- name: build
+  env: production
+  task: webpack -p
+```
+
+In cases where the `NODE_ENV` is empty, the third task will be preferred. However if `NODE_ENV` is either `development` or `production` then the more specific tasks &mdash; those with `env` defined &mdash; will be chosen rather than the default.
+
 ## Task Enumeration
 
 By executing the `taskfile` command from the terminal all tasks in the `.taskfile.yml` file will be enumerated, and runnable using the arrow keys followed by <kbd>enter</kbd>. In some cases however you may wish to omit tasks from the enumeration, which you can do by specifying the `hide` key in the configuration.
