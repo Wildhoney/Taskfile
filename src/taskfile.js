@@ -50,7 +50,7 @@ const normalise = tasks  => {
 export const error = message => {
     const error = new PrettyError();
     console.log(error.render(new Error(message)));
-    process.exitCode(1);
+    process.exit(1);
 };
 
 /**
@@ -72,7 +72,7 @@ export const exec = async tasks => {
                normaliseNL
     );
 
-    const queue         = new Queue({ error: err => queue.abort() && error(err.message) });
+    const queue         = new Queue({ error: () => queue.abort() && process.exitCode(1) });
     const [,,, ...args] = process.argv;
 
     return tasks.map(group => {
