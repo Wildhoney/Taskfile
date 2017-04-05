@@ -38035,15 +38035,12 @@ var normalise = function normalise(tasks) {
         var isCurrentArray = Array.isArray(task);
         var isPreviousArray = Array.isArray(tasks[index - 1]);
 
-        if (isCurrentArray || isPreviousArray) {
-            return [].concat(_toConsumableArray(xs), _toConsumableArray(normalise([].concat(task))));
-        }
-
-        var _ref = [_ramda2.default.init(xs), _ramda2.default.last(xs) || []],
-            rest = _ref[0],
-            last = _ref[1];
-
-        return [].concat(_toConsumableArray(rest), [[].concat(_toConsumableArray(last), [task])]);
+        return isCurrentArray || isPreviousArray ? [].concat(_toConsumableArray(xs), _toConsumableArray(normalise([].concat(task)))) : function () {
+            var _ref = [_ramda2.default.init(xs), _ramda2.default.last(xs) || []],
+                rest = _ref[0],
+                last = _ref[1];
+            return [].concat(_toConsumableArray(rest), [[].concat(_toConsumableArray(last), [task])]);
+        }();
     }, []);
 };
 
