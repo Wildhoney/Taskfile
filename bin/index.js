@@ -38086,7 +38086,7 @@ var exec = exports.exec = function () {
                             return str.replace(/\\t/ig, '\t');
                         }, _normalizeNewline2.default);
                         queue = new _orderlyQueue2.default({ error: function error(err) {
-                                return _error(err.message);
+                                return queue.abort() && _error(err.message);
                             } });
                         _process$argv = _toArray(process.argv), args = _process$argv.slice(3);
                         return _context.abrupt('return', tasks.map(function (group) {

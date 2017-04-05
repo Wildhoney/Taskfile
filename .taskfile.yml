@@ -5,6 +5,11 @@
 
 - name: test
   tasks:
-    - xo src/*.js
-    - NODE_ENV= nyc ava
-    - - nyc report --reporter=html
+    - taskfile lint
+    - taskfile spec
+
+- name: lint
+  task: xo src/*.js
+
+- name: spec
+  task: NODE_ENV= nyc ava
