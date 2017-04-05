@@ -38052,7 +38052,7 @@ var normalise = function normalise(tasks) {
  * @param {String} message
  * @return {void}
  */
-var error = exports.error = function error(message) {
+var _error = function error(message) {
     var error = new _prettyError2.default();
     console.log(error.render(new Error(message)));
     process.exit(1);
@@ -38063,6 +38063,7 @@ var error = exports.error = function error(message) {
  * @param {Array} tasks
  * @return {Promise}
  */
+exports.error = _error;
 var exec = exports.exec = function () {
     var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee(tasks) {
         var literals, queue, _process$argv, args;
@@ -38084,8 +38085,8 @@ var exec = exports.exec = function () {
                         }, function (str) {
                             return str.replace(/\\t/ig, '\t');
                         }, _normalizeNewline2.default);
-                        queue = new _orderlyQueue2.default({ error: function error() {
-                                return process.exit(1);
+                        queue = new _orderlyQueue2.default({ error: function error(err) {
+                                return _error(err.message);
                             } });
                         _process$argv = _toArray(process.argv), args = _process$argv.slice(3);
                         return _context.abrupt('return', tasks.map(function (group) {
@@ -38192,7 +38193,7 @@ var read = exports.read = function read() {
 
         var tasks = normalise([].concat(model.task || model.tasks));
         return _ramda2.default.omit(['task'], _extends({}, model, { tasks: tasks }));
-    }) : error('Unable to find "' + file + '" relative to the current directory.');
+    }) : _error('Unable to find "' + file + '" relative to the current directory.');
 };
 
 /***/ }),
