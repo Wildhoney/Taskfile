@@ -72,7 +72,7 @@ export const exec = async tasks => {
                normaliseNL
     );
 
-    const queue         = new Queue();
+    const queue         = new Queue({ error: () => process.exit(1) });
     const [,,, ...args] = process.argv;
 
     return tasks.map(group => {
