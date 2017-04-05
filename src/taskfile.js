@@ -72,13 +72,21 @@ export const exec = async tasks => {
                normaliseNL
     );
 
-    const queue         = new Queue({ error: () => queue.abort() && process.exitCode(1) });
+    const queue         = new Queue();
     const [,,, ...args] = process.argv;
 
     return tasks.map(group => {
 
         return queue.process(() => Promise.all(group.map(task => {
-            return execa.shell(`${literals(task)} ${args.map(literals).join(' ')}`, { stdio: 'inherit' });
+
+            return new Promise(resolve => {
+
+                execa.shell(`${literals(task)} ${args.map(literals).join(' ')}`, { stdio: 'inherit' })
+                     .then(resolve)
+                     .catch(queue.abort);
+
+            });
+
         })));
 
     });

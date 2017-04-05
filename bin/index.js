@@ -38084,15 +38084,17 @@ var exec = exports.exec = function () {
                         }, function (str) {
                             return str.replace(/\\t/ig, '\t');
                         }, _normalizeNewline2.default);
-                        queue = new _orderlyQueue2.default({ error: function error() {
-                                return queue.abort() && process.exitCode(1);
-                            } });
+                        queue = new _orderlyQueue2.default();
                         _process$argv = _toArray(process.argv), args = _process$argv.slice(3);
                         return _context.abrupt('return', tasks.map(function (group) {
 
                             return queue.process(function () {
                                 return Promise.all(group.map(function (task) {
-                                    return _execa2.default.shell(literals(task) + ' ' + args.map(literals).join(' '), { stdio: 'inherit' });
+
+                                    return new Promise(function (resolve) {
+
+                                        _execa2.default.shell(literals(task) + ' ' + args.map(literals).join(' '), { stdio: 'inherit' }).then(resolve).catch(queue.abort);
+                                    });
                                 }));
                             });
                         }));
