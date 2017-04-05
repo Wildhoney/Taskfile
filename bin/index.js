@@ -38055,7 +38055,7 @@ var normalise = function normalise(tasks) {
 var _error = function error(message) {
     var error = new _prettyError2.default();
     console.log(error.render(new Error(message)));
-    process.exit(1);
+    process.exitCode(1);
 };
 
 /**

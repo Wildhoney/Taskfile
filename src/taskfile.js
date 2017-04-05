@@ -50,7 +50,7 @@ const normalise = tasks  => {
 export const error = message => {
     const error = new PrettyError();
     console.log(error.render(new Error(message)));
-    process.exit(1);
+    process.exitCode(1);
 };
 
 /**
