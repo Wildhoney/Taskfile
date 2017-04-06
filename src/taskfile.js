@@ -31,10 +31,8 @@ const normalise = tasks  => {
         const isCurrentArray  = Array.isArray(task);
         const isPreviousArray = Array.isArray(tasks[index - 1]);
 
-        return isCurrentArray || isPreviousArray ? [...xs, ...normalise([].concat(task))] : do {
-            const [rest, last] = [R.init(xs), (R.last(xs) || [])];
-            [...rest, [...last, task]];
-        };
+        return isCurrentArray || isPreviousArray ? [...xs, ...normalise([].concat(task))] :
+                                                   [...R.init(xs), [...(R.last(xs) || []), task]];
 
     }, []);
 
