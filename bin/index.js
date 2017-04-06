@@ -38035,12 +38035,7 @@ var normalise = function normalise(tasks) {
         var isCurrentArray = Array.isArray(task);
         var isPreviousArray = Array.isArray(tasks[index - 1]);
 
-        return isCurrentArray || isPreviousArray ? [].concat(_toConsumableArray(xs), _toConsumableArray(normalise([].concat(task)))) : function () {
-            var _ref = [_ramda2.default.init(xs), _ramda2.default.last(xs) || []],
-                rest = _ref[0],
-                last = _ref[1];
-            return [].concat(_toConsumableArray(rest), [[].concat(_toConsumableArray(last), [task])]);
-        }();
+        return isCurrentArray || isPreviousArray ? [].concat(_toConsumableArray(xs), _toConsumableArray(normalise([].concat(task)))) : [].concat(_toConsumableArray(_ramda2.default.init(xs)), [[].concat(_toConsumableArray(_ramda2.default.last(xs) || []), [task])]);
     }, []);
 };
 
@@ -38061,7 +38056,7 @@ var error = exports.error = function error(message) {
  * @return {Promise}
  */
 var exec = exports.exec = function () {
-    var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee(tasks) {
+    var _ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee(tasks) {
         var literals, queue, _process$argv, args;
 
         return regeneratorRuntime.wrap(function _callee$(_context) {
@@ -38105,7 +38100,7 @@ var exec = exports.exec = function () {
     }));
 
     return function exec(_x) {
-        return _ref2.apply(this, arguments);
+        return _ref.apply(this, arguments);
     };
 }();
 
@@ -38146,9 +38141,9 @@ var seek = exports.seek = function seek() {
  * @return {Function}
  */
 var env = exports.env = function env(environment) {
-    return function (_ref3) {
-        var _ref3$env = _ref3.env,
-            env = _ref3$env === undefined ? '' : _ref3$env;
+    return function (_ref2) {
+        var _ref2$env = _ref2.env,
+            env = _ref2$env === undefined ? '' : _ref2$env;
         return env === '' || environment === env;
     };
 };
