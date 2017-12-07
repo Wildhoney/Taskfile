@@ -1,5 +1,6 @@
 import { prompt }            from 'inquirer';
 import by                    from 'sort-by';
+import { uniq }              from 'ramda';
 import { read, exec, error } from './taskfile';
 
 /**
@@ -8,7 +9,7 @@ import { read, exec, error } from './taskfile';
  */
 const list = () => {
 
-    const choices  = read().filter(task => task.hide !== true).sort(by('name')).map(task => task.name);
+    const choices  = uniq(read().filter(task => task.hide !== true).sort(by('name')).map(task => task.name));
     const question = {
         type: 'list',
         name: 'script',
