@@ -38276,6 +38276,12 @@ var TASKFILE_RC = '.taskfile.yml';
 var MAX_ITERATIONS = 10;
 
 /**
+ * @constant childProcesses
+ * @type {Set}
+ */
+var childProcesses = new Set();
+
+/**
  * @method normalise
  * @param {Array} tasks
  * @return {Array}
@@ -38300,6 +38306,9 @@ var normalise = function normalise(tasks) {
 var error = exports.error = function error(message) {
     var exitCode = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
 
+    childProcesses.forEach(function (child) {
+        return child.kill('SIGINT');
+    });
     var error = new _prettyError2.default();
     console.log(error.render(new Error(message)));
     process.exit(exitCode);
@@ -38340,9 +38349,11 @@ var exec = exports.exec = function () {
 
                                     return new Promise(function (resolve) {
 
-                                        _execa2.default.shell(literals(task) + ' ' + args.map(literals).join(' '), { stdio: 'inherit' }).then(resolve).catch(function (e) {
+                                        var child = _execa2.default.shell(literals(task) + ' ' + args.map(literals).join(' '), { stdio: 'inherit' });
+                                        childProcesses.add(child);
+                                        child.then(resolve).catch(function (err) {
                                             queue.abort();
-                                            e.code && error(e.message, e.code);
+                                            err.code && error(err.message, err.code);
                                         });
                                     });
                                 }));

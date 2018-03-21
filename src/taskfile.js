@@ -20,6 +20,12 @@ const TASKFILE_RC = '.taskfile.yml';
 const MAX_ITERATIONS = 10;
 
 /**
+ * @constant childProcesses
+ * @type {Set}
+ */
+const childProcesses = new Set();
+
+/**
  * @method normalise
  * @param {Array} tasks
  * @return {Array}
@@ -47,6 +53,7 @@ const normalise = tasks  => {
 export const error = (message, exitCode = 1) => {
     const error = new PrettyError();
     console.log(error.render(new Error(message)));
+    childProcesses.forEach(child => child.kill('SIGINT'));
     process.exit(exitCode);
 };
 
@@ -78,13 +85,12 @@ export const exec = async tasks => {
 
             return new Promise(resolve => {
 
-                execa
-                    .shell(`${literals(task)} ${args.map(literals).join(' ')}`, { stdio: 'inherit' })
-                    .then(resolve)
-                    .catch(err => {
-                        queue.abort();
-                        err.code && error(err.message, err.code);
-                    });
+                const child = execa.shell(`${literals(task)} ${args.map(literals).join(' ')}`, { stdio: 'inherit' });
+                childProcesses.add(child);
+                child.then(resolve).catch(err => {
+                    queue.abort();
+                    err.code && error(err.message, err.code);
+                }); 
 
             });
 
