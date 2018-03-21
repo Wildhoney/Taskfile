@@ -90,7 +90,7 @@ export const exec = async tasks => {
                 child.then(resolve).catch(err => {
                     queue.abort();
                     err.code && error(err.message, err.code);
-                }); 
+                });
 
             });
 
