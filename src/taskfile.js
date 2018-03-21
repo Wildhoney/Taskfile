@@ -78,12 +78,13 @@ export const exec = async tasks => {
 
             return new Promise(resolve => {
 
-                execa.shell(`${literals(task)} ${args.map(literals).join(' ')}`, { stdio: 'inherit' })
-                     .then(resolve)
-                     .catch(e => {
+                execa
+                    .shell(`${literals(task)} ${args.map(literals).join(' ')}`, { stdio: 'inherit' })
+                    .then(resolve)
+                    .catch(err => {
                         queue.abort();
-                        e.code && error(e.message, e.code);
-                     });
+                        err.code && error(err.message, err.code);
+                    });
 
             });
 
