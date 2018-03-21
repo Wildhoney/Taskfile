@@ -54,6 +54,9 @@ export const error = (message, exitCode = 1) => {
     const error = new PrettyError();
     console.log(error.render(new Error(message)));
     childProcesses.forEach(child => child.kill('SIGINT'));
+    process.stdin.write = R.identity;
+    process.stdout.write = R.identity;
+    process.stderr.write = R.identity;
     process.exit(exitCode);
 };
 
