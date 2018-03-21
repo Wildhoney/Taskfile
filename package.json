@@ -36,11 +36,16 @@
   },
   "homepage": "https://github.com/Wildhoney/Taskfile#readme",
   "dependencies": {
+    "execa": "~0.6.3",
     "inquirer": "~3.0.5",
     "js-yaml": "~3.7.0",
+    "orderly-queue": "~0.1.10",
     "pretty-error": "~2.0.3",
     "ramda": "~0.23.0",
-    "sort-by": "~1.1.1"
+    "sort-by": "~1.1.1",
+    "spawn-sync": "~1.0.15",
+    "thread-sleep": "~2.0.0",
+    "try-thread-sleep": "~1.0.2"
   },
   "devDependencies": {
     "ava": "~0.17.0",
@@ -52,15 +57,12 @@
     "babel-preset-stage-0": "~6.22.0",
     "babel-register": "~6.22.0",
     "coveralls": "~2.11.15",
-    "execa": "~0.6.2",
     "mock-fs": "~4.2.0",
     "normalize-newline": "~3.0.0",
     "nyc": "~10.0.0",
-    "orderly-queue": "~0.1.10",
     "prepend-file-cli": "~1.0.6",
-    "sort-by": "~1.1.1",
     "webpack": "~2.2.1",
-    "xo": "~0.18.0"
+    "xo": "~0.18.2"
   },
   "ava": {
     "files": [
