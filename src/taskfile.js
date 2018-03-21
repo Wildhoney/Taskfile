@@ -41,12 +41,13 @@ const normalise = tasks  => {
 /**
  * @method error
  * @param {String} message
+ * @param {Number} [exitCode = 1]
  * @return {void}
  */
-export const error = message => {
+export const error = (message, exitCode = 1) => {
     const error = new PrettyError();
     console.log(error.render(new Error(message)));
-    process.exit(1);
+    process.exit(exitCode);
 };
 
 /**
@@ -79,7 +80,10 @@ export const exec = async tasks => {
 
                 execa.shell(`${literals(task)} ${args.map(literals).join(' ')}`, { stdio: 'inherit' })
                      .then(resolve)
-                     .catch(queue.abort);
+                     .catch(e => {
+                        queue.abort();
+                        e.code && error(e.message, e.code);
+                     });
 
             });
 
