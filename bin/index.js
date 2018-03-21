@@ -38306,11 +38306,11 @@ var normalise = function normalise(tasks) {
 var error = exports.error = function error(message) {
     var exitCode = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
 
+    var error = new _prettyError2.default();
+    console.log(error.render(new Error(message)));
     childProcesses.forEach(function (child) {
         return child.kill('SIGINT');
     });
-    var error = new _prettyError2.default();
-    console.log(error.render(new Error(message)));
     process.exit(exitCode);
 };
 
