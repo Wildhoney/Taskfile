@@ -38311,6 +38311,9 @@ var error = exports.error = function error(message) {
     childProcesses.forEach(function (child) {
         return child.kill('SIGINT');
     });
+    process.stdin.write = _ramda2.default.identity;
+    process.stdout.write = _ramda2.default.identity;
+    process.stderr.write = _ramda2.default.identity;
     process.exit(exitCode);
 };
 
