@@ -51,7 +51,7 @@ const normalise = tasks  => {
  * @return {void}
  */
 export const error = (message, exitCode = 1) => {
-    
+
     exitCode > 0 && do {
         const error = new PrettyError();
         console.log(error.render(new Error(message)));
