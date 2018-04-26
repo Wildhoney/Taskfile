@@ -41,7 +41,7 @@
     "js-yaml": "~3.7.0",
     "orderly-queue": "~0.1.10",
     "pretty-error": "~2.0.3",
-    "ramda": "~0.23.0",
+    "ramda": "~0.25.0",
     "sort-by": "~1.1.1",
     "spawn-sync": "~1.0.15",
     "thread-sleep": "~2.0.0",

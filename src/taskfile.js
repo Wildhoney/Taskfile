@@ -1,5 +1,5 @@
 import fs          from 'fs';
-import R           from 'ramda';
+import * as R      from 'ramda';
 import yaml        from 'js-yaml';
 import execa       from 'execa';
 import Queue       from 'orderly-queue';
