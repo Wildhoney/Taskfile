@@ -48,7 +48,7 @@
     "try-thread-sleep": "~1.0.2"
   },
   "devDependencies": {
-    "ava": "~0.17.0",
+    "ava": "~0.25.0",
     "babel-cli": "~6.22.2",
     "babel-eslint": "~7.1.1",
     "babel-loader": "~6.3.2",
