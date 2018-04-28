@@ -93,6 +93,27 @@ Using the above configuration Taskfile will run the relevant task based on the `
 
 In cases where the `NODE_ENV` is empty, the third task will be preferred. However if `NODE_ENV` is either `development` or `production` then the more specific tasks &mdash; those with `env` defined &mdash; will be chosen rather than the default irrespective of the ordering of the tasks.
 
+Taskfile also supports filtering tasks by the platform you're on &ndash; we use the [Node.js `os` module's list](https://nodejs.org/api/os.html#os_os_platform) to filter. You can specify the platform by using the `os` option:
+
+```yaml
+- name: build
+  os: darwin
+  task: webpack
+```
+
+In the above the `build` task will **only** be available on `darwin` (MacOS) platforms. If you specify both `env` and `os` then the conditional has greater priority than just specifying one of them. For instance in the below case, the second `build` would take precendence because it matches more conditions than the first one when `NODE_ENV=development` and `os.platform() === 'darwin'`:
+
+```yaml
+- name: build
+  os: darwin
+  task: webpack
+
+- name: build
+  os: darwin
+  env: development
+  task: webpack
+```
+
 ## Task Enumeration
 
 By executing the `taskfile` command from the terminal all tasks in the `.taskfile.yml` file will be enumerated, and runnable using the arrow keys followed by <kbd>enter</kbd>. In some cases however you may wish to omit tasks from the enumeration, which you can do by specifying the `hide` key in the configuration.
