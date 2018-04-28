@@ -16,7 +16,7 @@
 - [x] Compatible with Windows based systems
 - [x] Filter by `NODE_ENV` and `os.platform()` conditionals
 - [x] Avoid wrapper bloat such as with [Gulp](http://gulpjs.com/)
-- [x] Automatic help page with `taskfile help`
+- [ ] Automatic help page with `taskfile help`
 - [x] Choice of tasks with `taskfile`
 - [x] Use `npm run [task]` commands as usual
 
