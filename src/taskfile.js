@@ -1,11 +1,11 @@
 import { readFileSync, existsSync } from 'fs';
 import { platform } from 'os';
-import * as R      from 'ramda';
-import yaml        from 'js-yaml';
-import execa       from 'execa';
-import Queue       from 'orderly-queue';
+import * as R from 'ramda';
+import yaml from 'js-yaml';
+import execa from 'execa';
+import Queue from 'orderly-queue';
 import PrettyError from 'pretty-error';
-import by          from 'sort-by';
+import by from 'sort-by';
 import normaliseNL from 'normalize-newline';
 
 /**

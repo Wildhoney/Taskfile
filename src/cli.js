@@ -1,6 +1,6 @@
-import { prompt }            from 'inquirer';
-import by                    from 'sort-by';
-import { uniq }              from 'ramda';
+import { prompt } from 'inquirer';
+import by from 'sort-by';
+import { uniq } from 'ramda';
 import { read, exec, error } from './taskfile';
 
 /**
