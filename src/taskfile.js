@@ -1,4 +1,5 @@
-import fs          from 'fs';
+import { readFileSync, existsSync } from 'fs';
+import { platform } from 'os';
 import * as R      from 'ramda';
 import yaml        from 'js-yaml';
 import execa       from 'execa';
@@ -123,7 +124,7 @@ export const seek = (file = TASKFILE_RC) => {
 
             // Determine if the taskfile exists in the current path, otherwise keep iterating until we meet
             // the limit as determined by `MAX_ITERATIONS`.
-            return fs.existsSync(location) ? { location, path, found: true } : locate(`${path}../`, iteration + 1);
+            return existsSync(location) ? { location, path, found: true } : locate(`${path}../`, iteration + 1);
 
         })(`${path}${file}`);
 
@@ -134,12 +135,29 @@ export const seek = (file = TASKFILE_RC) => {
 };
 
 /**
- * @method env
- * @param {String} environment
- * @return {Function}
+ * @constant filters
+ * @type {Object}
  */
-export const env = environment => {
-    return ({ env = '' }) => env === '' || environment === env;
+export const filters = {
+
+    /**
+     * @method byEnv
+     * @param {String} value
+     * @return {Function}
+     */
+    byEnv: value => {
+        return ({ env = '' }) => env === '' || value === env;
+    },
+
+    /**
+     * @method byOS
+     * @param {String} value
+     * @return {Function}
+     */
+    byOS: value => {
+        return ({ os = '' }) => os === '' || value === os;
+    }
+
 };
 
 /**
@@ -147,15 +165,15 @@ export const env = environment => {
  * @param {Object} model
  * @return {Object}
  */
-export const fill = model => ({ env: '', ...model });
+export const fill = model => ({ env: '', os: '', ...model });
 
 /**
  * @method read
  * @param {String} [file = TASKFILE_RC]
- * @param {String} [environment = process.env.NODE_ENV]
+ * @param {String} [env = process.env.NODE_ENV]
  * @return {Array}
  */
-export const read = (file = TASKFILE_RC, environment = process.env.NODE_ENV) => {
+export const read = (file = TASKFILE_RC, env = process.env.NODE_ENV, os = platform()) => {
 
     const { found, location } = seek(file);
 
@@ -164,13 +182,24 @@ export const read = (file = TASKFILE_RC, environment = process.env.NODE_ENV) => 
      * @param {String} file
      * @return {Array}
      */
-    const parse = file => yaml.safeLoad(fs.readFileSync(file)) || [];
+    const parse = file => yaml.safeLoad(readFileSync(file)) || [];
 
-    return found ? parse(location).filter(env(environment)).map(fill).sort(by('-env')).map(model => {
+    const x = parse(location).filter(filters.byEnv(env))
+                             .filter(filters.byOS(os))
+                             .map(fill)
+                             .sort(by('-env', '-os'));
 
-        const tasks = normalise([].concat(model.task || model.tasks));
-        return R.omit(['task'], { ...model, tasks });
+    return !found ? error(`Unable to find "${file}" relative to the current directory.`) : do {
 
-    }) : error(`Unable to find "${file}" relative to the current directory.`);
+        parse(location)
+            .filter(filters.byEnv(env))
+            .filter(filters.byOS(os))
+            .map(fill).sort(by('-os', '-env'))
+            .map(model => {
+                const tasks = normalise([].concat(model.task || model.tasks));
+                return R.omit(['task'], { ...model, tasks });
+            });
+
+    }
 
 };
