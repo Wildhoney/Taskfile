@@ -7,7 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "build": "webpack",
+    "build": "webpack && prepend bin/index.js '#!/usr/bin/env node\n\n'",
     "test": "npm run spec && npm run lint",
     "spec": "NODE_ENV= nyc ava && npm run report",
     "lint": "xo src/*.js",
@@ -60,6 +60,7 @@
     "mock-fs": "~4.2.0",
     "normalize-newline": "~3.0.0",
     "nyc": "~10.0.0",
+    "prepend-file-cli": "~1.0.6",
     "webpack": "~4.6.0",
     "webpack-cli": "~2.0.15",
     "xo": "~0.18.2"
