@@ -174,7 +174,7 @@ export const fill = model => ({ env: '', os: '', ...model });
  * @param {String} [env = process.env.NODE_ENV]
  * @return {Array}
  */
-export const read = (file = TASKFILE_RC, { env = process.env.NODE_ENV, os = platform() }) => {
+export const read = (file = TASKFILE_RC, { env = process.env.NODE_ENV, os = platform() } = {}) => {
 
     const { found, location } = seek(file);
 
