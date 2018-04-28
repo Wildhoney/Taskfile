@@ -1,7 +1,7 @@
 import test from 'ava';
 import { chdir } from 'process';
 import mock from 'mock-fs';
-import { read, seek, fill, env } from '../src/taskfile';
+import { read, seek, fill, filters } from '../src/taskfile';
 
 test('should be able to find the .taskfile.yml with backwards recursion;', t => {
 
@@ -23,14 +23,22 @@ test('should be able to find the .taskfile.yml with backwards recursion;', t => 
 });
 
 test('should be able to fill in the `env` if unset;', t => {
-    t.deepEqual(fill({ name: 'test' }), { name: 'test', env: '' });
-    t.deepEqual(fill({ name: 'test', env: 'development' }), { name: 'test', env: 'development' });
+    t.deepEqual(fill({ name: 'test' }), { name: 'test', env: '', os: '' });
+    t.deepEqual(fill({ name: 'test', env: 'development' }), { name: 'test', env: 'development', os: '' });
+    t.deepEqual(fill({ name: 'test', env: 'development', os: 'darwin' }), { name: 'test', env: 'development', os: 'darwin' });
+    t.deepEqual(fill({ name: 'test', os: 'darwin' }), { name: 'test', env: '', os: 'darwin' });
 });
 
 test('should be able to match against the environment variable;', t => {
-    t.true(env('development')({ env: '' }));
-    t.true(env('development')({ env: 'development' }));
-    t.false(env('development')({ env: 'production' }));
+    t.true(filters.byEnv('development')({ env: '' }));
+    t.true(filters.byEnv('development')({ env: 'development' }));
+    t.false(filters.byEnv('development')({ env: 'production' }));
+});
+
+test('should be able to match against the os platform;', t => {
+    t.true(filters.byOS('darwin')({ darwin: '' }));
+    t.true(filters.byOS('darwin')({ os: 'darwin' }));
+    t.false(filters.byOS('darwin')({ os: 'win32' }));
 });
 
 test('should be able to read the meta information;', t => {
@@ -91,19 +99,59 @@ test('should be able to handle a single task using "task";', t => {
 test('should be able to determine the command based on the NODE_ENV variable;', t => {
 
     // NODE_ENV is "development".
-    const [task] = read('./tests/mock/environment.yml', 'development');
-    t.deepEqual(task.tasks, [['npm run build --source-map']]);
+    const [firstTask] = read('./tests/mock/environment.yml', { env: 'development' });
+    t.deepEqual(firstTask.tasks, [['npm run build --source-map']]);
 
     // NODE_ENV is "production".
-    const [secondTask] = read('./tests/mock/environment.yml', 'production');
+    const [secondTask] = read('./tests/mock/environment.yml', { env: 'production' });
     t.deepEqual(secondTask.tasks, [['npm run build --minify']]);
 
     // NODE_ENV is an empty string.
-    const [thirdTask] = read('./tests/mock/environment.yml', '');
+    const [thirdTask] = read('./tests/mock/environment.yml', { env: '' });
     t.deepEqual(thirdTask.tasks, [['npm run build']]);
 
     // NODE_ENV is undefined.
-    const [fourthTask] = read('./tests/mock/environment.yml', undefined);
+    const [fourthTask] = read('./tests/mock/environment.yml', { env: undefined });
     t.deepEqual(fourthTask.tasks, [['npm run build']]);
+
+});
+
+test('should be able to determine the command based on the OS platform;', t => {
+
+    // Platform is "darwin".
+    const [firstTask] = read('./tests/mock/platform.yml', { os: 'darwin' });
+    t.deepEqual(firstTask.tasks, [['npm run build --source-map']]);
+
+    // Platform is "win32".
+    const [secondTask] = read('./tests/mock/platform.yml', { os: 'win32' });
+    t.deepEqual(secondTask.tasks, [['npm run build --minify']]);
+
+    // Platform is an empty string.
+    const [thirdTask] = read('./tests/mock/platform.yml', { os: '' });
+    t.deepEqual(thirdTask.tasks, [['npm run build']]);
+
+});
+
+test('should be able to determine the command based on the OS platform and NODE_ENV variable;', t => {
+
+    // Platform is "darwin" and NODE_ENV is "production".
+    const [firstTask] = read('./tests/mock/combination.yml', { env: 'production', os: 'darwin' });
+    t.deepEqual(firstTask.tasks, [['npm run build --source-map']]);
+
+    // Platform is "darwin" and NODE_ENV is "development".
+    const [secondTask] = read('./tests/mock/combination.yml', { env: 'development', os: 'darwin' });
+    t.deepEqual(secondTask.tasks, [['npm run build --minify']]);
+
+    // Platform is "win32".
+    const [thirdTask] = read('./tests/mock/combination.yml', { env: 'development', os: 'win32' });
+    t.deepEqual(thirdTask.tasks, [['npm run build --production']]);
+
+    // Platform is "win32" and NODE_ENV is "production".
+    const [fourthTask] = read('./tests/mock/combination.yml', { env: '', os: 'win32' });
+    t.deepEqual(fourthTask.tasks, [['npm run build']]);
+
+    // Platform is "sunos" and NODE_ENV is "development".
+    const [fifthTask] = read('./tests/mock/combination.yml', { env: 'development', os: 'sunos' });
+    t.deepEqual(fifthTask.tasks, [['npm run build']]);
 
 });

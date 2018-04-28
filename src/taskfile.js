@@ -38,8 +38,9 @@ const normalise = tasks  => {
         const isCurrentArray  = Array.isArray(task);
         const isPreviousArray = Array.isArray(tasks[index - 1]);
 
-        return isCurrentArray || isPreviousArray ? [...xs, ...normalise([].concat(task))] :
-                                                   [...R.init(xs), [...(R.last(xs) || []), task]];
+        return (isCurrentArray || isPreviousArray) ?
+            [...xs, ...normalise([].concat(task))] :
+            [...R.init(xs), [...(R.last(xs) || []), task]];
 
     }, []);
 
@@ -78,7 +79,7 @@ export const exec = async tasks => {
         str => str.replace(/\\n/ig, '\n'),
         str => str.replace(/\\r/ig, '\r'),
         str => str.replace(/\\t/ig, '\t'),
-               normaliseNL
+        normaliseNL
     );
 
     const queue         = new Queue();
@@ -173,7 +174,7 @@ export const fill = model => ({ env: '', os: '', ...model });
  * @param {String} [env = process.env.NODE_ENV]
  * @return {Array}
  */
-export const read = (file = TASKFILE_RC, env = process.env.NODE_ENV, os = platform()) => {
+export const read = (file = TASKFILE_RC, { env = process.env.NODE_ENV, os = platform() }) => {
 
     const { found, location } = seek(file);
 
@@ -184,22 +185,20 @@ export const read = (file = TASKFILE_RC, env = process.env.NODE_ENV, os = platfo
      */
     const parse = file => yaml.safeLoad(readFileSync(file)) || [];
 
-    const x = parse(location).filter(filters.byEnv(env))
-                             .filter(filters.byOS(os))
-                             .map(fill)
-                             .sort(by('-env', '-os'));
-
     return !found ? error(`Unable to find "${file}" relative to the current directory.`) : do {
+
+        const format = model => {
+            const tasks = normalise([].concat(model.task || model.tasks));
+            return R.omit('task', { ...model, tasks });
+        };
 
         parse(location)
             .filter(filters.byEnv(env))
             .filter(filters.byOS(os))
-            .map(fill).sort(by('-os', '-env'))
-            .map(model => {
-                const tasks = normalise([].concat(model.task || model.tasks));
-                return R.omit(['task'], { ...model, tasks });
-            });
+            .map(fill)
+            .sort(by('-os', '-env'))
+            .map(format);
 
-    }
+    };
 
 };

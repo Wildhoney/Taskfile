@@ -1,0 +1,17 @@
+- os: darwin
+  env: production
+  tasks:
+    - npm run build --source-map
+
+- os: darwin
+  env: development
+  tasks:
+    - npm run build --minify
+
+- os: win32
+  env: development
+  tasks:
+    - npm run build --production
+
+- tasks:
+    - npm run build

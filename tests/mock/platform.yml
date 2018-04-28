@@ -1,0 +1,10 @@
+- os: darwin
+  tasks:
+    - npm run build --source-map
+
+- os: win32
+  tasks:
+    - npm run build --minify
+
+- tasks:
+    - npm run build
