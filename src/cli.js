@@ -32,7 +32,7 @@ const list = () => {
 const main = () => {
 
     const [,, name = null] = process.argv;
-    const task             = read().find(model => model.name === name);
+    const task = read().find(model => model.name === name);
 
     // When a name has been specified we'll run the associated task, otherwise list all of the available tasks.
     name ? (task ? exec(task.tasks) : error(`Unable to find the "${name}" task.`)) : list();

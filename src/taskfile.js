@@ -35,7 +35,7 @@ const normalise = tasks  => {
 
     return tasks.reduce((xs, task, index) => {
 
-        const isCurrentArray  = Array.isArray(task);
+        const isCurrentArray = Array.isArray(task);
         const isPreviousArray = Array.isArray(tasks[index - 1]);
 
         return (isCurrentArray || isPreviousArray) ?
@@ -146,18 +146,14 @@ export const filters = {
      * @param {String} value
      * @return {Function}
      */
-    byEnv: value => {
-        return ({ env = '' }) => env === '' || value === env;
-    },
+    byEnv: value => ({ env = '' }) => env === '' || value === env,
 
     /**
      * @method byOS
      * @param {String} value
      * @return {Function}
      */
-    byOS: value => {
-        return ({ os = '' }) => os === '' || value === os;
-    }
+    byOS: value => ({ os = '' }) => os === '' || value === os
 
 };
 
