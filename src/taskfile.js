@@ -153,7 +153,9 @@ export const filters = {
      * @param {String} value
      * @return {Function}
      */
-    byOS: value => ({ os = '' }) => os === '' || value === os
+    byOS: value => ({ os = '' }) => {
+        return Array.isArray(os) ? R.contains(value, os) : (os === '' || value === os);
+    }
 
 };
 

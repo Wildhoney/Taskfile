@@ -130,6 +130,10 @@ test('should be able to determine the command based on the OS platform;', t => {
     const [thirdTask] = read('./tests/mock/platform.yml', { os: '' });
     t.deepEqual(thirdTask.tasks, [['npm run build']]);
 
+    // Platform is "freebsd" in an array.
+    const [fourthTask] = read('./tests/mock/platform.yml', { os: 'freebsd' });
+    t.deepEqual(fourthTask.tasks, [['npm run build --development']]);
+
 });
 
 test('should be able to determine the command based on the OS platform and NODE_ENV variable;', t => {

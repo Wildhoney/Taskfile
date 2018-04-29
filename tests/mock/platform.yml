@@ -6,5 +6,11 @@
   tasks:
     - npm run build --minify
 
+- os:
+    - freebsd
+    - openbsd
+  tasks:
+    - npm run build --development
+
 - tasks:
     - npm run build
