@@ -115,7 +115,7 @@ In the above the `build` task will **only** be available on `darwin` (MacOS) pla
   task: webpack
 ```
 
-It's worth noting that the `os` field also accepts a list of platforms to match again, such as:
+It's worth noting that the `os` field also accepts a list of platforms to match against, such as:
 
 ```yaml
 - name: build
