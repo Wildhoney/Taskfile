@@ -115,6 +115,17 @@ In the above the `build` task will **only** be available on `darwin` (MacOS) pla
   task: webpack
 ```
 
+It's worth noting that the `os` field also accepts a list of platforms to match again, such as:
+
+```yaml
+- name: build
+  os:
+    - freebsd
+    - openbsd
+  env: development
+  task: webpack
+```
+
 ## Task Enumeration
 
 By executing the `taskfile` command from the terminal all tasks in the `.taskfile.yml` file will be enumerated, and runnable using the arrow keys followed by <kbd>enter</kbd>. In some cases however you may wish to omit tasks from the enumeration, which you can do by specifying the `hide` key in the configuration.
