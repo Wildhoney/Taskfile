@@ -1,6 +1,8 @@
-import { prompt } from 'inquirer';
+#!/usr/bin/env node --experimental-modules --no-warnings
+
+import inquirer from 'inquirer';
 import by from 'sort-by';
-import { uniq } from 'ramda';
+import R from 'ramda';
 import { read, exec, error } from './taskfile';
 
 /**
@@ -9,7 +11,7 @@ import { read, exec, error } from './taskfile';
  */
 const list = () => {
 
-    const choices  = uniq(read().filter(task => task.hide !== true).sort(by('name')).map(task => task.name));
+    const choices  = R.uniq(read().filter(task => task.hide !== true).sort(by('name')).map(task => task.name));
     const question = {
         type: 'list',
         name: 'script',
@@ -18,7 +20,7 @@ const list = () => {
         filter: value => value.toLowerCase()
     };
 
-    choices.length > 0 ? prompt([question]).then(answers => {
+    choices.length > 0 ? inquirer.prompt([question]).then(answers => {
         const task = read().find(model => model.name === answers.script);
         answers.script && exec(task.tasks);
     }) : error('Unable to find any commands to enumerate.');

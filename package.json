@@ -2,7 +2,7 @@
   "name": "taskfile",
   "version": "0.7.0",
   "description": "Yet another attempt at a simple task runner for npm with parallelisation support using bash commands via YAML.",
-  "main": "bin/index.js",
+  "main": "./src/index.js",
   "directories": {
     "test": "tests"
   },
@@ -14,7 +14,7 @@
     "report": "nyc report --reporter=html"
   },
   "bin": {
-    "taskfile": "./bin/index.js"
+    "taskfile": "./src/index.js"
   },
   "repository": {
     "type": "git",
@@ -70,8 +70,8 @@
     "files": [
       "tests/*.test.js"
     ],
-    "babel": "inherit",
     "require": [
+      "esm",
       "babel-register",
       "babel-polyfill"
     ]
