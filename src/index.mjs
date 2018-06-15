@@ -1,6 +1,3 @@
-#!/bin/sh
-':' //; exec "$(command -v nodejs || command -v node)" --experimental-modules --no-warnings "$0" "$@"
-
 import inquirer from 'inquirer';
 import by from 'sort-by';
 import R from 'ramda';

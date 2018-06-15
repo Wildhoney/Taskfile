@@ -1,5 +1,6 @@
 import fileSystem from 'fs';
 import operatingSystem from 'os';
+import env from 'env-variable';
 import R from 'ramda';
 import yaml from 'js-yaml';
 import execa from 'execa';
@@ -169,10 +170,10 @@ export const fill = model => ({ env: '', os: '', ...model });
 /**
  * @method read
  * @param {String} [file = TASKFILE_RC]
- * @param {String} [env = process.env.NODE_ENV]
+ * @param {String} [env = env().NODE_ENV]
  * @return {Array}
  */
-export const read = (file = TASKFILE_RC, { env = process.env.NODE_ENV, os = operatingSystem.platform() } = {}) => {
+export const read = (file = TASKFILE_RC, { env = env().NODE_ENV, os = operatingSystem.platform() } = {}) => {
 
     const { found, location } = seek(file);
 
