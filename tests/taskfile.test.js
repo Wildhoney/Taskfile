@@ -1,7 +1,7 @@
 import test from 'ava';
-import { chdir } from 'process';
+import fs from 'process';
 import mock from 'mock-fs';
-import { read, seek, fill, filters } from '../src/taskfile';
+import { read, seek, fill, filters } from '../src/taskfile.mjs';
 
 test('should be able to find the .taskfile.yml with backwards recursion;', t => {
 
@@ -12,10 +12,10 @@ test('should be able to find the .taskfile.yml with backwards recursion;', t => 
         '/projects/taskfile/.taskfile.yml': 'content of taskfile'
     });
 
-    chdir('/projects/taskfile/example/css');
+    fs.chdir('/projects/taskfile/example/css');
     t.deepEqual(seek(), { location: './../../.taskfile.yml', path: './../../', found: true });
 
-    chdir('/projects');
+    fs.chdir('/projects');
     t.deepEqual(seek(), { found: false });
 
     mock.restore();

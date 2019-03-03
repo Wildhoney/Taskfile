@@ -1,6 +1,6 @@
 import inquirer from 'inquirer';
 import by from 'sort-by';
-import R from 'ramda';
+import * as R from 'ramda';
 import { read, exec, error } from './taskfile';
 
 /**

@@ -1,7 +1,7 @@
 import fileSystem from 'fs';
 import operatingSystem from 'os';
 import envVars from 'env-variable';
-import R from 'ramda';
+import * as R from 'ramda';
 import yaml from 'js-yaml';
 import execa from 'execa';
 import Queue from 'orderly-queue';
