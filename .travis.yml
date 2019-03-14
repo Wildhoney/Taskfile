@@ -3,11 +3,3 @@ node_js: stable
 sudo: false
 after_success:
   - ./node_modules/.bin/nyc report --reporter=text-lcov | ./node_modules/.bin/coveralls
-
-deploy:
-  provider: heroku
-  api_key:
-    secure: xVGzwAiFaPgkqmX5V9eVKbKac/0GgknsFwXXyqid6DrtVY/N5jl6ZPIwcrD6hNXbPXnxECkDWAjKG9d1kTaCv1/qDekIrPy7YrQnKp+ZUPNy6+pU8OoCV7Za41QcBWg0naatcV0UOx9+OzrkXUbDJ+GcSYPg3sN8EeHCCZBed8Ckp9x6WHEFpWGCE/apjc5OVCrBT7St5gP3J9XHcUGJBDWuCtSe+n6bFyssdLrPbcQtDqfpOf4FjwzLBJ/jewl1DS6wH90FDgYIITGW4FV2fFb0kZ34we6LXj9Bdq0Uhxu1y/Rt+0wMGBHqi0CHmxuRA3Szj4bwdIkYm0HeNPJoI/RlAa7hNqlG9DfqahO3ghzyTvn9Xshix0YVRl2+zniq6odTa+thhzCPIZJrY/T2P+KNE7aneHXNtIAFB75SQ9X1qaAt1tu7OVVDVtYg5xSndgwlcjZTUP4soDNbSa0cCONiHGiSA54vZ11212vgYhPVkMxGiveBaLjXc2gTElgBZaZsVhLvyQ9JhsKf3UpbPOs8kFkcl/vzN7sg8qcCSbgpbt4dbDQVIpYrabwDqJlKV4kHlzEdvBmV05I2Q3XPIVIAOD08h4oa48tw4Ad5rGKTSsl6PlCJgV+2imaEM/wREbyfogntu3T44FWp3gkiZhZl1LVVWtN+eHUwbyiwiR4=
-  app: taskfile
-  on:
-    repo: Wildhoney/Taskfile
