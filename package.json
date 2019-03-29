@@ -58,7 +58,7 @@
     "babel-loader": "^8.0.5",
     "coveralls": "~3.0.3",
     "escope": "~3.6.0",
-    "esm": "~3.2.22",
+    "esm": "~3.2.20",
     "mock-fs": "~4.8.0",
     "nyc": "~13.3.0",
     "prepend-file-cli": "~1.0.6",
